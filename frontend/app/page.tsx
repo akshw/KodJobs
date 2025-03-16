@@ -1,12 +1,21 @@
-import Link from "next/link"
-import { AuthSection } from "@/components/auth-section"
-import { StatsCounter } from "@/components/stats-counter"
-import { FeatureCard } from "@/components/feature-card"
-import { Button } from "@/components/ui/button"
-import { AIMatchingSection } from "@/components/ai-matching-section"
-import { HeroBackground } from "@/components/hero-background"
-import { UploadResumeButton } from "@/components/upload-resume-button"
-import { Briefcase, Building2, Users, ChevronRight, CheckCircle, Zap, Award, BrainCircuit } from "lucide-react"
+import Link from "next/link";
+import { AuthSection } from "@/components/auth-section";
+import { StatsCounter } from "@/components/stats-counter";
+import { FeatureCard } from "@/components/feature-card";
+import { Button } from "@/components/ui/button";
+import { AIMatchingSection } from "@/components/ai-matching-section";
+import { HeroBackground } from "@/components/hero-background";
+import { UploadResumeButton } from "@/components/upload-resume-button";
+import {
+  Briefcase,
+  Building2,
+  Users,
+  ChevronRight,
+  CheckCircle,
+  Zap,
+  Award,
+  BrainCircuit,
+} from "lucide-react";
 
 export default function Home() {
   return (
@@ -16,7 +25,9 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <Link href="/" className="flex items-center gap-2 group">
               <span className="text-2xl font-bold">
-                <span className="text-black group-hover:animate-text-gradient transition-all duration-300">Kod</span>
+                <span className="text-black group-hover:animate-text-gradient transition-all duration-300">
+                  Kod
+                </span>
                 <span className="text-yellow-500 group-hover:animate-text-gradient transition-all duration-300">
                   Jobs
                 </span>
@@ -24,26 +35,45 @@ export default function Home() {
             </Link>
           </div>
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="/hire" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
+            <Link
+              href="/hire"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
               For Employers
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <Link href="#" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
+            <Link
+              href="#"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
               Browse Jobs
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <Link href="#" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
+            <Link
+              href="#"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
               Resources
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <Link href="#" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
+            <Link
+              href="#"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
               Blog
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </Link>
           </nav>
           <div className="hidden md:flex items-center gap-4">
-            <UploadResumeButton variant="outline" size="sm" className="group overflow-hidden relative" />
-            <Button size="sm" className="bg-yellow-500 hover:bg-yellow-600 text-black">
+            <UploadResumeButton
+              variant="outline"
+              size="sm"
+              className="group overflow-hidden relative"
+            />
+            <Button
+              size="sm"
+              className="bg-yellow-500 hover:bg-yellow-600 text-black"
+            >
               Get Started
             </Button>
           </div>
@@ -71,14 +101,20 @@ export default function Home() {
                         viewBox="0 0 100 10"
                         preserveAspectRatio="none"
                       >
-                        <path d="M0,5 Q25,0 50,5 T100,5" fill="none" stroke="currentColor" strokeWidth="2" />
+                        <path
+                          d="M0,5 Q25,0 50,5 T100,5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        />
                       </svg>
                     </span>
                     Opportunity
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl animate-fadeIn delay-100">
-                    Our AI analyzes your resume and skills to deliver personalized job recommendations that match your
-                    career goals.
+                    Our AI analyzes your resume and skills to deliver
+                    personalized job recommendations that match your career
+                    goals.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row animate-fadeIn delay-200">
@@ -90,24 +126,30 @@ export default function Home() {
                     <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
                     <span className="absolute inset-0 bg-yellow-600 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
                   </Button>
-                  <UploadResumeButton variant="outline" size="lg" className="group relative overflow-hidden" />
+                  <UploadResumeButton
+                    variant="outline"
+                    size="lg"
+                    className="group relative overflow-hidden"
+                  />
                 </div>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 pt-6 animate-fadeIn delay-300">
                   <StatsCounter
                     icon={<Briefcase className="h-5 w-5 text-yellow-500" />}
-                    value={10000}
+                    value={1000}
+                    suffix="+"
                     label="Active Jobs"
-                    duration={2000}
+                    duration={100}
                   />
                   <StatsCounter
                     icon={<Building2 className="h-5 w-5 text-yellow-500" />}
-                    value={2500}
+                    value={100}
+                    suffix="+"
                     label="Companies"
                     duration={2000}
                   />
                   <StatsCounter
                     icon={<Users className="h-5 w-5 text-yellow-500" />}
-                    value={85}
+                    value={95}
                     suffix="%"
                     label="Placement Rate"
                     duration={2000}
@@ -135,7 +177,8 @@ export default function Home() {
                   The Smarter Way to Find Tech Jobs
                 </h2>
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed">
-                  We connect talented developers with innovative companies looking for their skills.
+                  We connect talented developers with innovative companies
+                  looking for their skills.
                 </p>
               </div>
             </div>
@@ -172,8 +215,9 @@ export default function Home() {
                   Find Your Dream Tech Job
                 </h2>
                 <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed relative z-10">
-                  Browse thousands of curated tech jobs from top companies and startups. Apply with a single click and
-                  track your applications.
+                  Browse thousands of curated tech jobs from top companies and
+                  startups. Apply with a single click and track your
+                  applications.
                 </p>
                 <div className="relative z-10">
                   <Button
@@ -195,11 +239,17 @@ export default function Home() {
                   Hire Top Tech Talent
                 </h2>
                 <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed relative z-10">
-                  Post jobs, screen candidates, and build your tech team efficiently. Our platform connects you with
-                  qualified developers.
+                  Post jobs, screen candidates, and build your tech team
+                  efficiently. Our platform connects you with qualified
+                  developers.
                 </p>
                 <div className="relative z-10">
-                  <Button size="lg" variant="outline" className="gap-1 group relative overflow-hidden" asChild>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="gap-1 group relative overflow-hidden"
+                    asChild
+                  >
                     <Link href="/hire">
                       <span className="relative z-10 group-hover:text-white transition-colors duration-300">
                         Post a Job
@@ -228,12 +278,18 @@ export default function Home() {
                       viewBox="0 0 100 10"
                       preserveAspectRatio="none"
                     >
-                      <path d="M0,5 Q25,0 50,5 T100,5" fill="none" stroke="currentColor" strokeWidth="2" />
+                      <path
+                        d="M0,5 Q25,0 50,5 T100,5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      />
                     </svg>
                   </span>
                 </h2>
                 <p className="mx-auto max-w-[700px] text-gray-400 md:text-xl/relaxed">
-                  Join thousands of tech professionals who've found their dream jobs through KodJobs.
+                  Join thousands of tech professionals who've found their dream
+                  jobs through KodJobs.
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -245,9 +301,15 @@ export default function Home() {
                   <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
                   <span className="absolute inset-0 bg-yellow-600 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
                 </Button>
-                <Button variant="outline" size="lg" className="border-white hover:bg-white/10 group">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="border-white hover:bg-white/10 group"
+                >
                   <span>Learn More</span>
-                  <span className="ml-2 inline-block group-hover:translate-x-0.5 transition-transform">→</span>
+                  <span className="ml-2 inline-block group-hover:translate-x-0.5 transition-transform">
+                    →
+                  </span>
                 </Button>
               </div>
             </div>
@@ -260,19 +322,27 @@ export default function Home() {
             &copy; {new Date().getFullYear()} KodJobs. All rights reserved.
           </p>
           <div className="flex gap-4">
-            <Link href="#" className="text-sm text-muted-foreground hover:underline">
+            <Link
+              href="#"
+              className="text-sm text-muted-foreground hover:underline"
+            >
               Terms
             </Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:underline">
+            <Link
+              href="#"
+              className="text-sm text-muted-foreground hover:underline"
+            >
               Privacy
             </Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:underline">
+            <Link
+              href="#"
+              className="text-sm text-muted-foreground hover:underline"
+            >
               Contact
             </Link>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }
-
