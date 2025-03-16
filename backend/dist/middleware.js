@@ -25,6 +25,4 @@ function authMiddleware(req, res, next) {
         });
     }
 }
-module.exports = {
-    authMiddleware,
-};
+exports.default = authMiddleware;

@@ -20,6 +20,16 @@ model User {
   name String
   dob DateTime
   age Int
+  resumeUrl String?
+}
+
+model Employer{
+  id Int @id @default(autoincrement())
+  email String @unique
+  password String
+  companyName String
+  requirement String?
+
 }
 
 model Jobs {
@@ -28,6 +38,6 @@ model Jobs {
   jobPoster String
   title String
   date_time DateTime
-  ApplyUrl String
+  ApplyUrl String 
 
 }
