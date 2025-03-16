@@ -68,7 +68,6 @@ router.get("/jobs", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         })));
         const savedJobs = dbJobs.filter((job) => job !== null);
         res.json({
-            total: savedJobs.length,
             jobs: savedJobs,
         });
     }

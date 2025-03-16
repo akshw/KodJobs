@@ -1,448 +1,761 @@
-"use client"
+// import React, { useEffect, useState } from "react";
+// import {
+//   Search,
+//   SlidersHorizontal,
+//   Bookmark,
+//   LayoutGrid,
+//   List,
+//   ArrowRight,
+//   Building,
+//   Clock,
+//   MapPin,
+//   User,
+// } from "lucide-react";
+// import { format } from "date-fns";
+// import { Button } from "@/components/ui/button";
+// import { Input } from "@/components/ui/input";
+// import { Badge } from "@/components/ui/badge";
+// import { Card } from "@/components/ui/card";
+// import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import { Skeleton } from "@/components/ui/skeleton";
+// import { toast } from "sonner";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
+// // Define our new primary color
+// const primaryColor = "blue";
+
+// interface Job {
+//   id: number;
+//   jobid: number;
+//   jobPoster: string;
+//   title: string;
+//   date_time: string;
+//   ApplyUrl: string;
+// }
+
+// interface JobCardProps {
+//   job: Job;
+//   viewMode: string;
+// }
+
+// const JobCard: React.FC<JobCardProps> = ({ job, viewMode }) => {
+//   return (
+//     <Card
+//       className={`border rounded-lg transition-all duration-300 hover:shadow-xl hover:scale-[1.03] hover:border-[${primaryColor}] flex flex-col justify-between
+//         ${
+//           viewMode === "grid"
+//             ? "p-6 h-full bg-gradient-to-b from-white to-gray-50"
+//             : "p-5 flex-row items-center gap-4 bg-white"
+//         }`}
+//     >
+//       {viewMode === "grid" ? (
+//         // Grid View
+//         <>
+//           <div className="flex justify-between items-start mb-4">
+//             <div>
+//               <h3 className="text-xl font-bold text-gray-800">{job.title}</h3>
+//               <p className={`font-medium text-[${primaryColor}]`}>YC Company</p>
+//             </div>
+//             <div className={`bg-[${primaryColor}]/10 p-2 rounded-full`}>
+//               <Building className={`text-[${primaryColor}] h-5 w-5`} />
+//             </div>
+//           </div>
+
+//           <div className="space-y-3 mb-4 flex-grow">
+//             <div className="flex items-center text-sm text-gray-600">
+//               <User className={`h-4 w-4 mr-2 text-[${primaryColor}]`} />
+//               <span>Posted by: {job.jobPoster}</span>
+//             </div>
+//             <div className="flex items-center text-sm text-gray-600">
+//               <Clock className={`h-4 w-4 mr-2 text-[${primaryColor}]`} />
+//               <span>{format(new Date(job.date_time), "MMM dd, yyyy")}</span>
+//             </div>
+//             <div className="flex items-center text-sm text-gray-600">
+//               <MapPin className={`h-4 w-4 mr-2 text-[${primaryColor}]`} />
+//               <span>Remote/On-site</span>
+//             </div>
+//           </div>
+
+//           <Button
+//             className={`w-full bg-[${primaryColor}] hover:bg-[${primaryColor}]/80 text-white transition-all duration-300 transform hover:-translate-y-1 mt-auto group`}
+//             onClick={() => window.open(job.ApplyUrl, "_blank")}
+//           >
+//             Apply Now{" "}
+//             <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+//           </Button>
+//         </>
+//       ) : (
+//         // List View
+//         <>
+//           <div className="flex-grow flex items-center gap-4">
+//             <div
+//               className={`bg-[${primaryColor}]/10 p-3 rounded-full hidden sm:block`}
+//             >
+//               <Building className={`text-[${primaryColor}] h-6 w-6`} />
+//             </div>
+
+//             <div className="flex-grow">
+//               <h3 className="text-lg font-bold text-gray-800">{job.title}</h3>
+//               <div className="flex flex-wrap gap-3 mt-1.5">
+//                 <div className="flex items-center text-sm text-gray-600">
+//                   <User className={`h-3.5 w-3.5 mr-1 text-[${primaryColor}]`} />
+//                   <span>{job.jobPoster}</span>
+//                 </div>
+//                 <div className="flex items-center text-sm text-gray-600">
+//                   <Clock
+//                     className={`h-3.5 w-3.5 mr-1 text-[${primaryColor}]`}
+//                   />
+//                   <span>{format(new Date(job.date_time), "MMM dd, yyyy")}</span>
+//                 </div>
+//                 <Badge
+//                   variant="outline"
+//                   className={`bg-[${primaryColor}]/10 text-[${primaryColor}] rounded-full text-xs`}
+//                 >
+//                   Remote
+//                 </Badge>
+//               </div>
+//             </div>
+//           </div>
+
+//           <Button
+//             className={`bg-[${primaryColor}] hover:bg-[${primaryColor}]/80 text-white transition-all duration-300 transform hover:scale-105 whitespace-nowrap shrink-0 group`}
+//             onClick={() => window.open(job.ApplyUrl, "_blank")}
+//           >
+//             Apply{" "}
+//             <ArrowRight className="ml-1 h-4 w-4 hidden sm:inline group-hover:translate-x-1 transition-transform duration-300" />
+//           </Button>
+//         </>
+//       )}
+//     </Card>
+//   );
+// };
+
+// export const JobDashboard: React.FC = () => {
+//   const [jobs, setJobs] = useState<Job[]>([]);
+//   const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
+//   const [loading, setLoading] = useState(true);
+//   const [activeTab, setActiveTab] = useState("all");
+//   const [viewMode, setViewMode] = useState("grid");
+//   const [searchTerm, setSearchTerm] = useState("");
+
+//   useEffect(() => {
+//     const fetchJobs = async () => {
+//       try {
+//         const response = await fetch(
+//           "http://localhost:4000/api/dashboard/jobs"
+//         );
+//         if (!response.ok) {
+//           throw new Error("Failed to fetch jobs");
+//         }
+//         const data = await response.json();
+//         setJobs(data.jobs);
+//         setFilteredJobs(data.jobs);
+//         toast.success("Jobs loaded successfully!");
+//       } catch (error) {
+//         console.error("Error fetching jobs:", error);
+//         toast.error("Failed to load jobs");
+
+//         // Use sample data if API fails
+//         const sampleJobs = [
+//           {
+//             id: 10,
+//             jobid: 43375123,
+//             jobPoster: "ankerbachryhl",
+//             title: "Parahelp (YC S24) Is Hiring Founding Engineers (SF)",
+//             date_time: "2025-03-15T21:00:44.000Z",
+//             ApplyUrl:
+//               "https://www.ycombinator.com/companies/parahelp/jobs/PhUMEwg-founding-ai-engineer",
+//           },
+//           {
+//             id: 7,
+//             jobid: 43373728,
+//             jobPoster: "edreichua",
+//             title: "Stellar Sleep (YC S23) Is Hiring",
+//             date_time: "2025-03-15T17:00:12.000Z",
+//             ApplyUrl:
+//               "https://www.ycombinator.com/companies/stellar-sleep/jobs/Yb9IzAW-founding-product-engineer",
+//           },
+//         ];
+
+//         setJobs(sampleJobs);
+//         setFilteredJobs(sampleJobs);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchJobs();
+//   }, []);
+
+//   // Fix search functionality
+//   useEffect(() => {
+//     // Apply filters whenever search term or active tab changes
+//     let results = [...jobs];
+
+//     // Apply search filter - make it case insensitive
+//     if (searchTerm.trim() !== "") {
+//       const searchTermLower = searchTerm.toLowerCase();
+//       results = results.filter(
+//         (job) =>
+//           job.title.toLowerCase().includes(searchTermLower) ||
+//           job.jobPoster.toLowerCase().includes(searchTermLower)
+//       );
+//     }
+
+//     // Apply tab filter
+//     if (activeTab === "featured") {
+//       // For demo purposes, let's assume first job is featured
+//       results = results.filter((job) => job.id === 10);
+//     } else if (activeTab === "remote") {
+//       // For demo, all jobs are remote
+//       // No additional filtering needed
+//     }
+
+//     setFilteredJobs(results);
+//   }, [searchTerm, activeTab, jobs]);
+
+//   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     setSearchTerm(e.target.value);
+//   };
+
+//   const handleTabChange = (value: string) => {
+//     setActiveTab(value);
+//   };
+
+//   return (
+//     <div className="container mx-auto px-4 py-8 max-w-7xl animate-fade-in">
+//       {/* Updated header with new gradient and animation */}
+//       <div
+//         className={`mb-8 bg-gradient-to-r from-[${primaryColor}]/10 to-white p-8 rounded-xl shadow-sm transition-all duration-500 hover:shadow-md`}
+//       >
+//         <h1 className="text-3xl font-bold mb-2 text-gray-800 animate-fade-in">
+//           Job Dashboard
+//         </h1>
+//         <p className="text-gray-600 max-w-2xl animate-fade-in">
+//           Browse through our curated list of tech jobs that match your skills
+//           and preferences. Find opportunities at YC-backed companies and take
+//           the next step in your career.
+//         </p>
+//       </div>
+
+//       <div className="flex flex-col md:flex-row justify-between mb-6 gap-4">
+//         <div className="relative w-full md:w-2/3">
+//           <Search
+//             className={`absolute left-3 top-1/2 transform -translate-y-1/2 text-[${primaryColor}]`}
+//             size={18}
+//           />
+//           <Input
+//             className={`pl-10 w-full border border-gray-200 rounded-md focus:border-[${primaryColor}] focus:ring-1 focus:ring-[${primaryColor}]`}
+//             placeholder="Search jobs, skills, or companies..."
+//             onChange={handleSearch}
+//             value={searchTerm}
+//           />
+//         </div>
+//         <div className="flex gap-2 flex-wrap">
+//           <Button
+//             variant="outline"
+//             className={`flex items-center gap-2 hover:bg-[${primaryColor}]/10 hover:text-[${primaryColor}] transition-colors duration-200 border-gray-200`}
+//           >
+//             <SlidersHorizontal size={18} />
+//             Filters
+//           </Button>
+//           <Button
+//             variant="outline"
+//             className={`flex items-center gap-2 hover:bg-[${primaryColor}]/10 hover:text-[${primaryColor}] transition-colors duration-200 border-gray-200`}
+//           >
+//             <Bookmark size={18} />
+//             Saved
+//           </Button>
+//           {/* View mode selection moved next to Saved button */}
+//           <div className="flex border rounded-md border-gray-200">
+//             <Button
+//               variant="ghost"
+//               className={`px-3 ${
+//                 viewMode === "grid"
+//                   ? `bg-[${primaryColor}]/10 text-[${primaryColor}]`
+//                   : ""
+//               } transition-colors duration-200`}
+//               onClick={() => setViewMode("grid")}
+//             >
+//               <LayoutGrid size={18} />
+//             </Button>
+//             <Button
+//               variant="ghost"
+//               className={`px-3 ${
+//                 viewMode === "list"
+//                   ? `bg-[${primaryColor}]/10 text-[${primaryColor}]`
+//                   : ""
+//               } transition-colors duration-200`}
+//               onClick={() => setViewMode("list")}
+//             >
+//               <List size={18} />
+//             </Button>
+//           </div>
+//         </div>
+//       </div>
+
+//       <Tabs defaultValue="all" className="mb-8" onValueChange={handleTabChange}>
+//         <TabsList className="bg-gray-100">
+//           <TabsTrigger
+//             value="all"
+//             className={`data-[state=active]:bg-white data-[state=active]:text-[${primaryColor}] data-[state=active]:shadow-sm`}
+//           >
+//             All Jobs
+//           </TabsTrigger>
+//           <TabsTrigger
+//             value="featured"
+//             className={`data-[state=active]:bg-white data-[state=active]:text-[${primaryColor}] data-[state=active]:shadow-sm`}
+//           >
+//             Featured
+//           </TabsTrigger>
+//           <TabsTrigger
+//             value="remote"
+//             className={`data-[state=active]:bg-white data-[state=active]:text-[${primaryColor}] data-[state=active]:shadow-sm`}
+//           >
+//             Remote
+//           </TabsTrigger>
+//         </TabsList>
+//       </Tabs>
+
+//       {/* Search result count and summary */}
+//       {!loading && (
+//         <div className="mb-4 text-sm text-gray-500">
+//           Showing {filteredJobs.length}{" "}
+//           {filteredJobs.length === 1 ? "job" : "jobs"}
+//           {searchTerm ? ` for "${searchTerm}"` : ""}
+//         </div>
+//       )}
+
+//       {/* Loading skeleton */}
+//       {loading ? (
+//         <div
+//           className={`grid grid-cols-1 ${
+//             viewMode === "grid"
+//               ? "md:grid-cols-2 lg:grid-cols-3"
+//               : "md:grid-cols-1"
+//           } gap-6`}
+//         >
+//           {[1, 2, 3, 4, 5, 6].map((_, index) => (
+//             <Card key={index} className="p-6 h-[250px] animate-pulse">
+//               <Skeleton className="h-8 w-2/3 mb-2" />
+//               <Skeleton className="h-4 w-1/3 mb-4" />
+//               <div className="space-y-3 mb-4">
+//                 <Skeleton className="h-4 w-full" />
+//                 <Skeleton className="h-4 w-full" />
+//                 <Skeleton className="h-4 w-full" />
+//               </div>
+//               <Skeleton className="h-10 w-full mt-auto" />
+//             </Card>
+//           ))}
+//         </div>
+//       ) : (
+//         // Jobs grid with enhanced animations
+//         <div
+//           className={`grid grid-cols-1 ${
+//             viewMode === "grid"
+//               ? "md:grid-cols-2 lg:grid-cols-3"
+//               : "md:grid-cols-1"
+//           } gap-6 animate-fade-in`}
+//         >
+//           {filteredJobs.length > 0 ? (
+//             filteredJobs.map((job, index) => (
+//               <div
+//                 key={job.id}
+//                 className="animate-fade-in"
+//                 style={{ animationDelay: `${index * 0.1}s` }}
+//               >
+//                 <JobCard job={job} viewMode={viewMode} />
+//               </div>
+//             ))
+//           ) : (
+//             <div className="col-span-full text-center py-16 bg-gray-50 rounded-lg border border-dashed border-gray-300 animate-fade-in">
+//               <p className="text-gray-500 mb-3">
+//                 No jobs found matching your criteria.
+//               </p>
+//               <Button
+//                 variant="outline"
+//                 className={`mt-4 hover:bg-[${primaryColor}]/10 hover:text-[${primaryColor}] transition-colors duration-200`}
+//                 onClick={() => {
+//                   setFilteredJobs(jobs);
+//                   setActiveTab("all");
+//                   setSearchTerm("");
+//                 }}
+//               >
+//                 Reset Filters
+//               </Button>
+//             </div>
+//           )}
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+import React, { useEffect, useState } from "react";
 import {
-  Briefcase,
-  MapPin,
-  Clock,
-  DollarSign,
-  Star,
-  Filter,
   Search,
-  ChevronRight,
-  User,
-  FileText,
+  SlidersHorizontal,
+  Bookmark,
   LayoutGrid,
   List,
-  BookmarkPlus,
-  AlertCircle,
-} from "lucide-react"
-import { Input } from "@/components/ui/input"
-import { ResumeUploader } from "@/components/resume-uploader"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { cn } from "@/lib/utils"
+  ArrowRight,
+  Building,
+  Clock,
+  MapPin,
+  User,
+} from "lucide-react";
+import { format, parseISO } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 
 interface Job {
-  id: string
-  title: string
-  company: string
-  location: string
-  salary: string
-  type: string
-  posted: string
-  description: string
-  skills: string[]
-  featured: boolean
-  postedBy: string
-  postedAt: string
-}
-
-type ViewMode = "grid" | "list"
-
-// Enhance the job dashboard with better visual appeal and user experience
-export function JobDashboard() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [activeTab, setActiveTab] = useState("all")
-  const [showResumeUploader, setShowResumeUploader] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [showLoginAlert, setShowLoginAlert] = useState(false)
-  const [viewMode, setViewMode] = useState<ViewMode>("grid")
-
-  // Check login status on component mount
-  useEffect(() => {
-    try {
-      const loggedIn = localStorage.getItem("isLoggedIn") === "true"
-      setIsLoggedIn(loggedIn)
-    } catch (error) {
-      console.error("Error accessing localStorage:", error)
-    }
-  }, [])
-
-  // Sample job data
-  const jobs: Job[] = [
-    {
-      id: "1",
-      title: "Senior React Developer",
-      company: "TechCorp Inc.",
-      location: "San Francisco, CA (Remote)",
-      salary: "$120K - $150K",
-      type: "Full-time",
-      posted: "2 days ago",
-      description:
-        "We're looking for an experienced React developer to join our team and help build innovative web applications.",
-      skills: ["React", "TypeScript", "Node.js", "Redux"],
-      featured: true,
-      postedBy: "Sarah Johnson",
-      postedAt: "2023-03-15 09:30 AM",
-    },
-    {
-      id: "2",
-      title: "Frontend Engineer",
-      company: "InnovateTech",
-      location: "New York, NY (Hybrid)",
-      salary: "$100K - $130K",
-      type: "Full-time",
-      posted: "1 week ago",
-      description: "Join our growing team to develop responsive and user-friendly interfaces for our SaaS platform.",
-      skills: ["JavaScript", "React", "CSS", "HTML"],
-      featured: true,
-      postedBy: "Michael Chen",
-      postedAt: "2023-03-10 02:15 PM",
-    },
-    {
-      id: "3",
-      title: "Full Stack Developer",
-      company: "StartupXYZ",
-      location: "Austin, TX (On-site)",
-      salary: "$90K - $120K",
-      type: "Full-time",
-      posted: "3 days ago",
-      description: "Looking for a versatile developer who can work on both frontend and backend technologies.",
-      skills: ["JavaScript", "Python", "React", "Django"],
-      featured: false,
-      postedBy: "Alex Rodriguez",
-      postedAt: "2023-03-14 11:45 AM",
-    },
-    {
-      id: "4",
-      title: "UI/UX Designer",
-      company: "DesignHub",
-      location: "Remote",
-      salary: "$85K - $110K",
-      type: "Contract",
-      posted: "5 days ago",
-      description: "Create beautiful and intuitive user interfaces for our clients across various industries.",
-      skills: ["Figma", "Adobe XD", "UI Design", "Prototyping"],
-      featured: false,
-      postedBy: "Emma Wilson",
-      postedAt: "2023-03-12 10:00 AM",
-    },
-    {
-      id: "5",
-      title: "DevOps Engineer",
-      company: "CloudSystems",
-      location: "Seattle, WA (Hybrid)",
-      salary: "$130K - $160K",
-      type: "Full-time",
-      posted: "1 day ago",
-      description: "Help us build and maintain our cloud infrastructure and deployment pipelines.",
-      skills: ["AWS", "Docker", "Kubernetes", "CI/CD"],
-      featured: true,
-      postedBy: "David Park",
-      postedAt: "2023-03-16 03:20 PM",
-    },
-    {
-      id: "6",
-      title: "Mobile Developer",
-      company: "AppWorks",
-      location: "Chicago, IL (Remote)",
-      salary: "$95K - $125K",
-      type: "Full-time",
-      posted: "1 week ago",
-      description: "Develop cross-platform mobile applications using React Native for our clients.",
-      skills: ["React Native", "JavaScript", "iOS", "Android"],
-      featured: false,
-      postedBy: "Jessica Lee",
-      postedAt: "2023-03-10 09:15 AM",
-    },
-  ]
-
-  // Filter jobs based on search term and active tab
-  const filteredJobs = jobs.filter((job) => {
-    const matchesSearch =
-      job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.skills.some((skill) => skill.toLowerCase().includes(searchTerm.toLowerCase()))
-
-    if (activeTab === "all") return matchesSearch
-    if (activeTab === "featured") return matchesSearch && job.featured
-    if (activeTab === "remote") return matchesSearch && job.location.toLowerCase().includes("remote")
-    return matchesSearch
-  })
-
-  const handleUploadResume = () => {
-    if (isLoggedIn) {
-      setShowResumeUploader(true)
-    } else {
-      setShowLoginAlert(true)
-      setTimeout(() => setShowLoginAlert(false), 5000)
-    }
-  }
-
-  return (
-    <div className="w-full py-8">
-      <div className="container px-4 md:px-6">
-        <div className="flex flex-col space-y-4 md:space-y-8">
-          <div className="flex flex-col space-y-2">
-            <div className="flex items-center justify-between">
-              <h2 className="text-3xl font-bold tracking-tight">Job Dashboard</h2>
-              <div className="hidden md:flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={cn("h-9 px-2", viewMode === "grid" && "bg-muted")}
-                  onClick={() => setViewMode("grid")}
-                  aria-label="Grid view"
-                  aria-pressed={viewMode === "grid"}
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={cn("h-9 px-2", viewMode === "list" && "bg-muted")}
-                  onClick={() => setViewMode("list")}
-                  aria-label="List view"
-                  aria-pressed={viewMode === "list"}
-                >
-                  <List className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-            <p className="text-muted-foreground">
-              Browse through our curated list of tech jobs that match your skills and preferences.
-            </p>
-          </div>
-
-          <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-            <div className="relative w-full md:w-1/2">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                type="text"
-                placeholder="Search jobs, skills, or companies..."
-                className="pl-10 py-2"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                aria-label="Search jobs"
-              />
-            </div>
-            <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm" className="h-9" onClick={handleUploadResume}>
-                <FileText className="h-4 w-4 mr-2" />
-                Upload Resume
-              </Button>
-              <Button variant="outline" size="sm" className="h-9">
-                <Filter className="h-4 w-4 mr-2" />
-                Filters
-              </Button>
-              <Button variant="outline" size="sm" className="h-9">
-                <BookmarkPlus className="h-4 w-4 mr-2" />
-                Saved
-              </Button>
-            </div>
-          </div>
-
-          <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-3 md:w-auto md:inline-flex">
-              <TabsTrigger value="all">All Jobs</TabsTrigger>
-              <TabsTrigger value="featured">Featured</TabsTrigger>
-              <TabsTrigger value="remote">Remote</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="all" className="mt-6">
-              {viewMode === "grid" ? (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {filteredJobs.map((job) => (
-                    <JobCard key={job.id} job={job} />
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {filteredJobs.map((job) => (
-                    <JobListItem key={job.id} job={job} />
-                  ))}
-                </div>
-              )}
-              {filteredJobs.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <Briefcase className="h-12 w-12 text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-medium">No jobs found</h3>
-                  <p className="text-muted-foreground mt-1">Try adjusting your search or filters</p>
-                </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="featured" className="mt-6">
-              {viewMode === "grid" ? (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {filteredJobs.map((job) => (
-                    <JobCard key={job.id} job={job} />
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {filteredJobs.map((job) => (
-                    <JobListItem key={job.id} job={job} />
-                  ))}
-                </div>
-              )}
-              {filteredJobs.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <Star className="h-12 w-12 text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-medium">No featured jobs found</h3>
-                  <p className="text-muted-foreground mt-1">Check back later for new opportunities</p>
-                </div>
-              )}
-            </TabsContent>
-
-            <TabsContent value="remote" className="mt-6">
-              {viewMode === "grid" ? (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {filteredJobs.map((job) => (
-                    <JobCard key={job.id} job={job} />
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {filteredJobs.map((job) => (
-                    <JobListItem key={job.id} job={job} />
-                  ))}
-                </div>
-              )}
-              {filteredJobs.length === 0 && (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <MapPin className="h-12 w-12 text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-medium">No remote jobs found</h3>
-                  <p className="text-muted-foreground mt-1">Try adjusting your search or filters</p>
-                </div>
-              )}
-            </TabsContent>
-          </Tabs>
-        </div>
-      </div>
-
-      {showResumeUploader && <ResumeUploader onClose={() => setShowResumeUploader(false)} />}
-
-      {showLoginAlert && (
-        <div className="fixed bottom-4 right-4 z-50 animate-slide-in-right">
-          <Alert variant="destructive" className="w-80">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>Please log in to upload your resume</AlertDescription>
-          </Alert>
-        </div>
-      )}
-    </div>
-  )
+  id: number;
+  jobid: number;
+  jobPoster: string;
+  title: string;
+  date_time: string;
+  ApplyUrl: string;
 }
 
 interface JobCardProps {
-  job: Job
+  job: Job;
+  viewMode: string;
 }
 
-function JobCard({ job }: JobCardProps) {
+const JobCard: React.FC<JobCardProps> = ({ job, viewMode }) => {
+  // Use client-side formatting inside useEffect
+  const [formattedDate, setFormattedDate] = useState<string>("");
+
+  useEffect(() => {
+    // Format date on client side after component mounts
+    try {
+      setFormattedDate(format(parseISO(job.date_time), "MMM dd, yyyy"));
+    } catch (error) {
+      setFormattedDate("Invalid date" + error);
+    }
+  }, [job.date_time]);
+
   return (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group">
-      <CardContent className="p-6">
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <h3 className="font-bold text-lg group-hover:text-yellow-500 transition-colors">{job.title}</h3>
-            <p className="text-muted-foreground">{job.company}</p>
-          </div>
-          {job.featured && <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">Featured</Badge>}
-        </div>
-
-        <div className="space-y-3 mb-4">
-          <div className="flex items-center text-sm text-muted-foreground">
-            <User className="h-4 w-4 mr-2 text-yellow-500" />
-            Posted by: {job.postedBy}
-          </div>
-          <div className="flex items-center text-sm text-muted-foreground">
-            <Clock className="h-4 w-4 mr-2 text-yellow-500" />
-            {job.postedAt}
-          </div>
-          <div className="flex items-center text-sm text-muted-foreground">
-            <MapPin className="h-4 w-4 mr-2 text-yellow-500" />
-            {job.location}
-          </div>
-          <div className="flex items-center text-sm text-muted-foreground">
-            <DollarSign className="h-4 w-4 mr-2 text-yellow-500" />
-            {job.salary}
-          </div>
-        </div>
-
-        <p className="text-sm mb-4 line-clamp-2">{job.description}</p>
-
-        <div className="flex flex-wrap gap-2">
-          {job.skills.map((skill) => (
-            <Badge key={skill} variant="outline" className="bg-muted/50">
-              {skill}
-            </Badge>
-          ))}
-        </div>
-      </CardContent>
-      <CardFooter className="p-6 pt-0 mt-2">
-        <Button className="w-full gap-1 group relative overflow-hidden bg-yellow-500 hover:bg-yellow-500 text-black">
-          <span className="relative z-10">Apply Now</span>
-          <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
-          <span className="absolute inset-0 bg-yellow-600 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
-        </Button>
-      </CardFooter>
-    </Card>
-  )
-}
-
-// Add a new JobListItem component for list view
-function JobListItem({ job }: JobCardProps) {
-  return (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg group">
-      <div className="p-6 flex flex-col md:flex-row md:items-center gap-4">
-        <div className="flex-1">
-          <div className="flex items-start justify-between mb-2">
+    <Card
+      className={`border rounded-lg transition-all duration-300 hover:shadow-lg hover:scale-[1.02] hover:border-amber-300 flex flex-col justify-between
+        ${
+          viewMode === "grid" ? "p-6 h-full" : "p-5 flex-row items-center gap-4"
+        }`}
+    >
+      {viewMode === "grid" ? (
+        // Grid View
+        <>
+          <div className="flex justify-between items-start mb-4">
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="font-bold text-lg group-hover:text-yellow-500 transition-colors">{job.title}</h3>
-                {job.featured && <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">Featured</Badge>}
-              </div>
-              <p className="text-muted-foreground">{job.company}</p>
+              <h3 className="text-xl font-bold text-gray-800">{job.title}</h3>
+              <p className="text-amber-600 font-medium">YC Company</p>
             </div>
-            <div className="hidden md:block">
-              <Button className="gap-1 group relative overflow-hidden bg-yellow-500 hover:bg-yellow-500 text-black">
-                <span className="relative z-10">Apply Now</span>
-                <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
-                <span className="absolute inset-0 bg-yellow-600 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
-              </Button>
+            <div className="bg-amber-50 p-2 rounded-full">
+              <Building className="text-amber-500 h-5 w-5" />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-3">
-            <div className="flex items-center text-sm text-muted-foreground">
-              <User className="h-4 w-4 mr-2 text-yellow-500" />
-              Posted by: {job.postedBy}
+          <div className="space-y-3 mb-4 flex-grow">
+            <div className="flex items-center text-sm text-gray-600">
+              <User className="h-4 w-4 mr-2 text-amber-500" />
+              <span>Posted by: {job.jobPoster}</span>
             </div>
-            <div className="flex items-center text-sm text-muted-foreground">
-              <MapPin className="h-4 w-4 mr-2 text-yellow-500" />
-              {job.location}
+            <div className="flex items-center text-sm text-gray-600">
+              <Clock className="h-4 w-4 mr-2 text-amber-500" />
+              <span>{formattedDate}</span>
             </div>
-            <div className="flex items-center text-sm text-muted-foreground">
-              <DollarSign className="h-4 w-4 mr-2 text-yellow-500" />
-              {job.salary}
+            <div className="flex items-center text-sm text-gray-600">
+              <MapPin className="h-4 w-4 mr-2 text-amber-500" />
+              <span>Remote/On-site</span>
             </div>
           </div>
 
-          <p className="text-sm mb-3 line-clamp-2">{job.description}</p>
-
-          <div className="flex flex-wrap gap-2">
-            {job.skills.map((skill) => (
-              <Badge key={skill} variant="outline" className="bg-muted/50">
-                {skill}
-              </Badge>
-            ))}
-          </div>
-        </div>
-
-        <div className="md:hidden mt-3">
-          <Button className="w-full gap-1 group relative overflow-hidden bg-yellow-500 hover:bg-yellow-500 text-black">
-            <span className="relative z-10">Apply Now</span>
-            <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
-            <span className="absolute inset-0 bg-yellow-600 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
+          <Button
+            className="w-full bg-amber-500 hover:bg-amber-600 text-white transition-colors duration-200 mt-auto"
+            onClick={() => window.open(job.ApplyUrl, "_blank")}
+          >
+            Apply Now <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
+        </>
+      ) : (
+        // List View
+        <>
+          <div className="flex-grow flex items-center gap-4">
+            <div className="bg-amber-50 p-3 rounded-full hidden sm:block">
+              <Building className="text-amber-500 h-6 w-6" />
+            </div>
+
+            <div className="flex-grow">
+              <h3 className="text-lg font-bold text-gray-800">{job.title}</h3>
+              <div className="flex flex-wrap gap-3 mt-1.5">
+                <div className="flex items-center text-sm text-gray-600">
+                  <User className="h-3.5 w-3.5 mr-1 text-amber-500" />
+                  <span>{job.jobPoster}</span>
+                </div>
+                <div className="flex items-center text-sm text-gray-600">
+                  <Clock className="h-3.5 w-3.5 mr-1 text-amber-500" />
+                  <span>{formattedDate}</span>
+                </div>
+                <Badge
+                  variant="outline"
+                  className="bg-amber-50 text-amber-700 rounded-full text-xs"
+                >
+                  Remote
+                </Badge>
+              </div>
+            </div>
+          </div>
+
+          <Button
+            className="bg-amber-500 hover:bg-amber-600 text-white transition-colors duration-200 whitespace-nowrap shrink-0"
+            onClick={() => window.open(job.ApplyUrl, "_blank")}
+          >
+            Apply <ArrowRight className="ml-1 h-4 w-4 hidden sm:inline" />
+          </Button>
+        </>
+      )}
+    </Card>
+  );
+};
+
+export const JobDashboard: React.FC = () => {
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("all");
+  const [viewMode, setViewMode] = useState("grid");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:4000/api/dashboard/jobs"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch jobs");
+        }
+        const data = await response.json();
+        setJobs(data.jobs);
+        setFilteredJobs(data.jobs);
+        toast.success("Jobs loaded successfully!");
+      } catch (error) {
+        console.error("Error fetching jobs:", error);
+        toast.error("Failed to load jobs");
+
+        // Use sample data if API fails
+        const sampleJobs = [
+          {
+            id: 10,
+            jobid: 43375123,
+            jobPoster: "ankerbachryhl",
+            title: "Parahelp (YC S24) Is Hiring Founding Engineers (SF)",
+            date_time: "2025-03-15T21:00:44.000Z",
+            ApplyUrl:
+              "https://www.ycombinator.com/companies/parahelp/jobs/PhUMEwg-founding-ai-engineer",
+          },
+          {
+            id: 7,
+            jobid: 43373728,
+            jobPoster: "edreichua",
+            title: "Stellar Sleep (YC S23) Is Hiring",
+            date_time: "2025-03-15T17:00:12.000Z",
+            ApplyUrl:
+              "https://www.ycombinator.com/companies/stellar-sleep/jobs/Yb9IzAW-founding-product-engineer",
+          },
+        ];
+
+        setJobs(sampleJobs);
+        setFilteredJobs(sampleJobs);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
+  useEffect(() => {
+    // Apply filters whenever search term or active tab changes
+    let results = [...jobs];
+
+    // Apply search filter
+    if (searchTerm) {
+      results = results.filter(
+        (job) =>
+          job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          job.jobPoster.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Apply tab filter
+    if (activeTab === "featured") {
+      // For demo purposes, let's assume first job is featured
+      results = results.filter((job) => job.id === 10);
+    } else if (activeTab === "remote") {
+      // For demo, all jobs are remote
+      // No additional filtering needed
+    }
+
+    setFilteredJobs(results);
+
+    if (results.length === 0 && searchTerm) {
+      toast.info("No jobs match your search criteria");
+    }
+  }, [searchTerm, activeTab, jobs]);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8 max-w-7xl animate-fade-in">
+      <div className="mb-8 bg-gradient-to-r from-amber-50 to-white p-6 rounded-xl">
+        <h1 className="text-3xl font-bold mb-2 text-gray-800">Job Dashboard</h1>
+        <p className="text-gray-600">
+          Browse through our curated list of tech jobs that match your skills
+          and preferences.
+        </p>
+      </div>
+
+      <div className="flex flex-col md:flex-row justify-between mb-6 gap-4">
+        <div className="relative w-full md:w-2/3">
+          <Search
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={18}
+          />
+          <Input
+            className="pl-10 w-full border rounded-md"
+            placeholder="Search jobs, skills, or companies..."
+            onChange={handleSearch}
+            value={searchTerm}
+          />
+        </div>
+        <div className="flex gap-2 flex-wrap">
+          <Button
+            variant="outline"
+            className="flex items-center gap-2 hover:bg-gray-100 transition-colors duration-200"
+          >
+            <SlidersHorizontal size={18} />
+            Filters
+          </Button>
+          <Button
+            variant="outline"
+            className="flex items-center gap-2 hover:bg-gray-100 transition-colors duration-200"
+          >
+            <Bookmark size={18} />
+            Saved
+          </Button>
+          <div className="flex border rounded-md">
+            <Button
+              variant="ghost"
+              className={`px-3 ${
+                viewMode === "grid" ? "bg-gray-100" : ""
+              } transition-colors duration-200`}
+              onClick={() => setViewMode("grid")}
+            >
+              <LayoutGrid size={18} />
+            </Button>
+            <Button
+              variant="ghost"
+              className={`px-3 ${
+                viewMode === "list" ? "bg-gray-100" : ""
+              } transition-colors duration-200`}
+              onClick={() => setViewMode("list")}
+            >
+              <List size={18} />
+            </Button>
+          </div>
         </div>
       </div>
-    </Card>
-  )
-}
 
+      <Tabs defaultValue="all" className="mb-8" onValueChange={handleTabChange}>
+        <TabsList className="bg-gray-100">
+          <TabsTrigger
+            value="all"
+            className="data-[state=active]:bg-white data-[state=active]:text-amber-500"
+          >
+            All Jobs
+          </TabsTrigger>
+          <TabsTrigger
+            value="featured"
+            className="data-[state=active]:bg-white data-[state=active]:text-amber-500"
+          >
+            Featured
+          </TabsTrigger>
+          <TabsTrigger
+            value="remote"
+            className="data-[state=active]:bg-white data-[state=active]:text-amber-500"
+          >
+            Remote
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+
+      {loading ? (
+        <div
+          className={`grid grid-cols-1 ${
+            viewMode === "grid"
+              ? "md:grid-cols-2 lg:grid-cols-3"
+              : "md:grid-cols-1"
+          } gap-6`}
+        >
+          {[1, 2, 3, 4, 5, 6].map((item) => (
+            <Card
+              key={`skeleton-${item}`}
+              className="p-6 h-[250px] animate-pulse"
+            >
+              <Skeleton className="h-8 w-2/3 mb-2" />
+              <Skeleton className="h-4 w-1/3 mb-4" />
+              <div className="space-y-3 mb-4">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+              </div>
+              <Skeleton className="h-10 w-full mt-auto" />
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div
+          className={`grid grid-cols-1 ${
+            viewMode === "grid"
+              ? "md:grid-cols-2 lg:grid-cols-3"
+              : "md:grid-cols-1"
+          } gap-6 animate-fade-in`}
+        >
+          {filteredJobs.length > 0 ? (
+            filteredJobs.map((job) => (
+              <JobCard key={job.id} job={job} viewMode={viewMode} />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+              <p className="text-gray-500">
+                No jobs found matching your criteria.
+              </p>
+              <Button
+                variant="outline"
+                className="mt-4 hover:bg-amber-50 hover:text-amber-600 transition-colors duration-200"
+                onClick={() => {
+                  setFilteredJobs(jobs);
+                  setActiveTab("all");
+                  setSearchTerm("");
+                }}
+              >
+                Reset Filters
+              </Button>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};

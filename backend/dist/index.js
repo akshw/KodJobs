@@ -21,7 +21,8 @@ app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use("/api", index_1.default);
 app.get("/health", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send("healthy-check");
+    console.log("healthy");
+    res.send("healthy");
 }));
 app.listen(config_1.PORT, () => {
     console.log(`Server is running on port ${config_1.PORT}`);

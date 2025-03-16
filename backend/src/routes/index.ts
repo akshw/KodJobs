@@ -4,6 +4,6 @@ import jobs from "./jobs";
 const router = express.Router();
 
 router.use("/user", user);
-router.use("/jobs", jobs);
+router.use("/dashboard", jobs);
 
-module.exports = router;
+export default router;

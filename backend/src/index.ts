@@ -7,10 +7,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use("api", rootrouter);
+app.use("/api", rootrouter);
 
 app.get("/health", async (req, res) => {
-  res.send("healthy-check");
+  console.log("healthy");
+  res.send("healthy");
 });
 
 app.listen(PORT, () => {

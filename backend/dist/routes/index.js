@@ -8,5 +8,5 @@ const user_1 = __importDefault(require("./user"));
 const jobs_1 = __importDefault(require("./jobs"));
 const router = express_1.default.Router();
 router.use("/user", user_1.default);
-router.use("/jobs", jobs_1.default);
+router.use("/dashboard", jobs_1.default);
 exports.default = router;
