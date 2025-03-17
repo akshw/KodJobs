@@ -15,7 +15,6 @@ router.get("/jobs", async (req, res) => {
     );
     const ids = jobid_res.data;
     jobId.push(...ids);
-    console.log(jobId);
 
     const jobPromises = jobId.map((job) => {
       return axios
@@ -32,7 +31,6 @@ router.get("/jobs", async (req, res) => {
     });
 
     const results = await Promise.all(jobPromises);
-    console.log(results);
     const jobDetails = results.filter((job) => {
       return job !== null;
     });

@@ -141,7 +141,7 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
     if (!validateSignInForm()) return;
 
     setIsSigningIn(true);
-    // Simulate API call
+
     try {
       const response = await fetch("http://localhost:4000/api/user/signin", {
         method: "POST",
@@ -149,37 +149,37 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email: signUpEmail,
-          password: signUpPassword,
+          email: signInEmail, // FIXED: Using signin email
+          password: signInPassword, // FIXED: Using signin password
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to sign up");
+        throw new Error(data.message || "Failed to sign in");
       }
 
       // Store auth data
       localStorage.setItem("token", data.token);
       localStorage.setItem("isLoggedIn", "true");
 
-      // Navigate to dashboard (preserving existing logic)
-      router.push(forEmployers ? "/hire/dashboard" : "/dashboard");
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setIsSigningUp(false);
-    }
-
-    setTimeout(() => {
-      setIsSigningIn(false);
-
-      // Set logged in state in localStorage
-      localStorage.setItem("isLoggedIn", "true");
       // Navigate to dashboard
       router.push(forEmployers ? "/hire/dashboard" : "/dashboard");
-    }, 1500);
+    } catch (error) {
+      if (error instanceof Error) {
+        const message = error.message;
+        if (message.includes("email")) {
+          setSignInEmailError(message);
+        } else if (message.includes("password")) {
+          setSignInPasswordError(message);
+        }
+        setShowSignInErrors(true);
+        setTimeout(() => setShowSignInErrors(false), 5000);
+      }
+    } finally {
+      setIsSigningIn(false); // FIXED: Using correct state setter
+    }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {

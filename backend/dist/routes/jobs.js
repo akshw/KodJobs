@@ -23,7 +23,6 @@ router.get("/jobs", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const jobid_res = yield axios_1.default.get("https://hacker-news.firebaseio.com/v0/jobstories.json", { timeout: 5000 });
         const ids = jobid_res.data;
         jobId.push(...ids);
-        console.log(jobId);
         const jobPromises = jobId.map((job) => {
             return axios_1.default
                 .get(`https://hacker-news.firebaseio.com/v0/item/${job}.json`, {
@@ -38,7 +37,6 @@ router.get("/jobs", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             });
         });
         const results = yield Promise.all(jobPromises);
-        console.log(results);
         const jobDetails = results.filter((job) => {
             return job !== null;
         });
