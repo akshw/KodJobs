@@ -9,6 +9,9 @@ app.use(cors());
 
 app.use("/api", rootrouter);
 
+app.get("/", (req, res) => {
+  res.send("Home");
+});
 app.get("/health", async (req, res) => {
   console.log("healthy");
   res.send("healthy");
