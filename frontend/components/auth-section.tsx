@@ -143,16 +143,19 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
     setIsSigningIn(true);
 
     try {
-      const response = await fetch("http://localhost:4000/api/user/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: signInEmail, // FIXED: Using signin email
-          password: signInPassword, // FIXED: Using signin password
-        }),
-      });
+      const response = await fetch(
+        "https://kodjobs-be.onrender.com/api/user/signin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: signInEmail, // FIXED: Using signin email
+            password: signInPassword, // FIXED: Using signin password
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -190,18 +193,21 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
     setIsSigningUp(true);
 
     try {
-      const response = await fetch("http://localhost:4000/api/user/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: signUpEmail,
-          password: signUpPassword,
-          name: signUpName,
-          dob: signUpDob,
-        }),
-      });
+      const response = await fetch(
+        "https://kodjobs-be.onrender.com/api/user/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: signUpEmail,
+            password: signUpPassword,
+            name: signUpName,
+            dob: signUpDob,
+          }),
+        }
+      );
 
       const data = await response.json();
 

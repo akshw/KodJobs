@@ -142,7 +142,7 @@ export const JobDashboard: React.FC = () => {
     const fetchJobs = async () => {
       try {
         const response = await fetch(
-          "http://localhost:4000/api/dashboard/jobs"
+          "https://kodjobs-be.onrender.com/api/dashboard/jobs"
         );
         if (!response.ok) {
           throw new Error("Failed to fetch jobs");
