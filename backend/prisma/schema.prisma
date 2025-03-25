@@ -21,6 +21,7 @@ model User {
   dob DateTime
   age Int
   resumeUrl String?
+  matches String?
 }
 
 model Employer{

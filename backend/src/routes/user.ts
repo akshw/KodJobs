@@ -1,18 +1,17 @@
 import express from "express";
-
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
-import {
-  JWT_SECRET,
-  AWS_ACCESS_KEY_ID,
-  AWS_ACCESS_KEY_SECRET,
-} from "../config";
 import { z } from "zod";
 import bcrypt from "bcrypt";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { SignupBody, SigninBody } from "../types";
 import authMiddleware from "../middleware";
+import {
+  JWT_SECRET,
+  AWS_ACCESS_KEY_ID,
+  AWS_ACCESS_KEY_SECRET,
+} from "../config";
 
 const router = express.Router();
 
@@ -144,11 +143,11 @@ router.post("/signin", async (req, res) => {
   }
 });
 
-router.get("/upload", async (req, res) => {
+router.get("/upload", authMiddleware, async (req, res) => {
   try {
     // Generate unique file key
     //@ts-ignore
-    const fileKey = `uploads/${Date.now()}-${req.userId}.pdf`;
+    const fileKey = `uploads${req.userId}.pdf`;
 
     const command = new PutObjectCommand({
       Bucket: "kodjobs2",
@@ -175,6 +174,58 @@ router.get("/upload", async (req, res) => {
   } catch (error) {
     console.error("Upload error:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.get("/me", authMiddleware, async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      // @ts-ignore
+      where: { id: req.userId },
+      select: { email: true, name: true },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.json(user);
+  } catch (error) {
+    console.error("Me error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+});
+
+router.get("/profile", authMiddleware, async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      // @ts-ignore
+      where: { id: req.userId },
+      select: {
+        email: true,
+        name: true,
+        age: true,
+        resumeUrl: true,
+        matches: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.json(user);
+  } catch (error) {
+    console.error("Profile error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
   }
 });
 

@@ -18,10 +18,11 @@ exports.SignupBody = zod_1.z.object({
         .string()
         .min(2, { message: "Name must be at least 2 characters" })
         .max(50),
-    dob: zod_1.z.coerce.date().refine((date) => {
+    dob: zod_1.z.coerce.date().refine((dateString) => {
+        const date = new Date(dateString);
         const age = new Date().getFullYear() - date.getFullYear();
-        return age >= 13;
-    }, { message: "You must be at least 13 years old" }),
+        return !isNaN(date.getTime()) && age >= 18;
+    }, { message: "Invalid date or you must be at least 18 years old" }),
 });
 exports.SigninBody = zod_1.z.object({
     email: zod_1.z.string().email({ message: "Invalid email format" }),

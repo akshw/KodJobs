@@ -9,238 +9,245 @@ import { Eye, EyeOff, Loader2, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
+// Types and Interfaces
 interface AuthSectionProps {
   forEmployers?: boolean;
 }
 
+interface FormErrors {
+  email?: string;
+  password?: string;
+  name?: string;
+  dob?: string;
+}
+
+interface SignInFormData {
+  email: string;
+  password: string;
+}
+
+interface SignUpFormData {
+  name: string;
+  email: string;
+  password: string;
+  dob?: string;
+}
+
+// Environment check
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+console.log("API URL:", API_URL);
+
+if (!API_URL) {
+  throw new Error("API_URL is not defined - check your environment variables");
+}
+
+// Custom hook for form handling
+const useAuthForm = (isSignUp: boolean) => {
+  const [formData, setFormData] = useState<SignInFormData | SignUpFormData>(
+    isSignUp
+      ? ({
+          email: "",
+          password: "",
+          name: "",
+          dob: "",
+        } as SignUpFormData)
+      : ({
+          email: "",
+          password: "",
+        } as SignInFormData)
+  );
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [showErrors, setShowErrors] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const setField = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const setError = (field: string, message: string) => {
+    setErrors((prev) => ({ ...prev, [field]: message }));
+    setShowErrors(true);
+    setTimeout(() => setShowErrors(false), 5000);
+  };
+
+  return {
+    formData,
+    errors,
+    showErrors,
+    isLoading,
+    setField,
+    setError,
+    setIsLoading,
+    setShowErrors,
+  };
+};
+
+// Form validation functions
+const validateSignInForm = (data: SignInFormData): FormErrors => {
+  const errors: FormErrors = {};
+
+  if (!data.email) {
+    errors.email = "Email is required";
+  } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+    errors.email = "Please enter a valid email";
+  }
+
+  if (!data.password) {
+    errors.password = "Password is required";
+  }
+
+  return errors;
+};
+
+const validateSignUpForm = (
+  data: SignUpFormData,
+  forEmployers: boolean
+): FormErrors => {
+  const errors: FormErrors = {};
+
+  if (!data.name) {
+    errors.name = "Name is required";
+  }
+
+  if (!data.email) {
+    errors.email = "Email is required";
+  } else if (!/\S+@\S+\.\S+/.test(data.email)) {
+    errors.email = "Please enter a valid email";
+  }
+
+  if (!forEmployers) {
+    if (!data.dob) {
+      errors.dob = "Date of birth is required";
+    } else {
+      const dobDate = new Date(data.dob);
+      const eighteenYearsAgo = new Date();
+      eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+
+      if (dobDate > eighteenYearsAgo) {
+        errors.dob = "You must be at least 18 years old";
+      }
+    }
+  }
+
+  if (!data.password) {
+    errors.password = "Password is required";
+  } else if (data.password.length < 8) {
+    errors.password = "Password must be at least 8 characters";
+  }
+
+  return errors;
+};
+
 export function AuthSection({ forEmployers = false }: AuthSectionProps) {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [isSigningIn, setIsSigningIn] = useState(false);
-  const [isSigningUp, setIsSigningUp] = useState(false);
-  const [showSignUp, setShowSignUp] = useState(true); // Default to sign up view
+  const [showSignUp, setShowSignUp] = useState(true);
 
-  // Form values
-  const [signInEmail, setSignInEmail] = useState("");
-  const [signInPassword, setSignInPassword] = useState("");
-  const [signUpName, setSignUpName] = useState("");
-  const [signUpEmail, setSignUpEmail] = useState("");
-  const [signUpDob, setSignUpDob] = useState("");
-  const [signUpPassword, setSignUpPassword] = useState("");
-
-  // Form errors
-  const [signInEmailError, setSignInEmailError] = useState("");
-  const [signInPasswordError, setSignInPasswordError] = useState("");
-  const [signUpNameError, setSignUpNameError] = useState("");
-  const [signUpEmailError, setSignUpEmailError] = useState("");
-  const [signUpDobError, setSignUpDobError] = useState("");
-  const [signUpPasswordError, setSignUpPasswordError] = useState("");
-
-  // Animation states for error messages
-  const [showSignInErrors, setShowSignInErrors] = useState(false);
-  const [showSignUpErrors, setShowSignUpErrors] = useState(false);
+  // Form state management
+  const signInForm = useAuthForm(false);
+  const signUpForm = useAuthForm(true);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const validateSignInForm = () => {
-    let isValid = true;
-
-    // Reset errors
-    setSignInEmailError("");
-    setSignInPasswordError("");
-
-    // Validate email
-    if (!signInEmail) {
-      setSignInEmailError("Email is required");
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(signInEmail)) {
-      setSignInEmailError("Please enter a valid email");
-      isValid = false;
-    }
-
-    // Validate password
-    if (!signInPassword) {
-      setSignInPasswordError("Password is required");
-      isValid = false;
-    }
-
-    if (!isValid) {
-      setShowSignInErrors(true);
-      setTimeout(() => setShowSignInErrors(false), 5000);
-    }
-
-    return isValid;
-  };
-
-  const validateSignUpForm = () => {
-    let isValid = true;
-
-    // Reset errors
-    setSignUpNameError("");
-    setSignUpEmailError("");
-    setSignUpDobError("");
-    setSignUpPasswordError("");
-
-    // Validate name
-    if (!signUpName) {
-      setSignUpNameError("Name is required");
-      isValid = false;
-    }
-
-    // Validate email
-    if (!signUpEmail) {
-      setSignUpEmailError("Email is required");
-      isValid = false;
-    } else if (!/\S+@\S+\.\S+/.test(signUpEmail)) {
-      setSignUpEmailError("Please enter a valid email");
-      isValid = false;
-    }
-
-    // Validate DOB
-    if (!signUpDob) {
-      setSignUpDobError("Date of birth is required");
-      isValid = false;
-    } else {
-      // Check if user is at least 18 years old
-      const dobDate = new Date(signUpDob);
-      const today = new Date();
-      const eighteenYearsAgo = new Date(
-        today.getFullYear() - 18,
-        today.getMonth(),
-        today.getDate()
-      );
-
-      if (dobDate > eighteenYearsAgo) {
-        setSignUpDobError("You must be at least 18 years old");
-        isValid = false;
-      }
-    }
-
-    // Validate password
-    if (!signUpPassword) {
-      setSignUpPasswordError("Password is required");
-      isValid = false;
-    } else if (signUpPassword.length < 8) {
-      setSignUpPasswordError("Password must be at least 8 characters");
-      isValid = false;
-    }
-
-    if (!isValid) {
-      setShowSignUpErrors(true);
-      setTimeout(() => setShowSignUpErrors(false), 5000);
-    }
-
-    return isValid;
-  };
-
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    const data = signInForm.formData as SignInFormData;
+    const errors = validateSignInForm(data);
 
-    if (!validateSignInForm()) return;
+    if (Object.keys(errors).length > 0) {
+      Object.entries(errors).forEach(([field, message]) => {
+        signInForm.setError(field, message);
+      });
+      return;
+    }
 
-    setIsSigningIn(true);
+    signInForm.setIsLoading(true);
 
     try {
-      const response = await fetch(
-        "https://kodjobs-be.onrender.com/api/user/signin",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: signInEmail, // FIXED: Using signin email
-            password: signInPassword, // FIXED: Using signin password
-          }),
-        }
-      );
+      const endpoint = forEmployers ? "hire/signin" : "user/signin";
+      const response = await fetch(`${API_URL}/api/${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-      const data = await response.json();
+      const responseData = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to sign in");
+        throw new Error(responseData.message || "Failed to sign in");
       }
 
-      // Store auth data
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", responseData.token);
       localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userType", forEmployers ? "employer" : "user");
 
-      // Navigate to dashboard
       router.push(forEmployers ? "/hire/dashboard" : "/dashboard");
     } catch (error) {
       if (error instanceof Error) {
         const message = error.message;
         if (message.includes("email")) {
-          setSignInEmailError(message);
+          signInForm.setError("email", message);
         } else if (message.includes("password")) {
-          setSignInPasswordError(message);
+          signInForm.setError("password", message);
         }
-        setShowSignInErrors(true);
-        setTimeout(() => setShowSignInErrors(false), 5000);
       }
     } finally {
-      setIsSigningIn(false); // FIXED: Using correct state setter
+      signInForm.setIsLoading(false);
     }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    const data = signUpForm.formData as SignUpFormData;
+    const errors = validateSignUpForm(data, forEmployers);
 
-    if (!validateSignUpForm()) return;
+    if (Object.keys(errors).length > 0) {
+      Object.entries(errors).forEach(([field, message]) => {
+        signUpForm.setError(field, message);
+      });
+      return;
+    }
 
-    setIsSigningUp(true);
+    signUpForm.setIsLoading(true);
 
     try {
-      const response = await fetch(
-        "https://kodjobs-be.onrender.com/api/user/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: signUpEmail,
-            password: signUpPassword,
-            name: signUpName,
-            dob: signUpDob,
-          }),
-        }
-      );
+      const endpoint = forEmployers ? "hire/signup" : "user/signup";
+      const response = await fetch(`${API_URL}/api/${endpoint}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-      const data = await response.json();
+      const responseData = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to sign up");
+        throw new Error(responseData.message || "Failed to sign up");
       }
 
-      // Store auth data
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("token", responseData.token);
       localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userType", forEmployers ? "employer" : "user");
 
-      // Navigate to dashboard (preserving existing logic)
       router.push(forEmployers ? "/hire/dashboard" : "/dashboard");
     } catch (error) {
-      // Handle validation errors
       if (error instanceof Error) {
         const message = error.message;
-
         if (message.includes("email")) {
-          setSignUpEmailError(message);
+          signUpForm.setError("email", message);
         } else if (message.includes("password")) {
-          setSignUpPasswordError(message);
+          signUpForm.setError("password", message);
         } else if (message.includes("name")) {
-          setSignUpNameError(message);
+          signUpForm.setError("name", message);
         } else {
-          setSignUpEmailError(message);
+          signUpForm.setError("email", message);
         }
-
-        setShowSignUpErrors(true);
-        setTimeout(() => setShowSignUpErrors(false), 5000);
       }
     } finally {
-      setIsSigningUp(false);
+      signUpForm.setIsLoading(false);
     }
   };
 
@@ -254,19 +261,20 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
   };
 
   return (
-    <div className="w-full max-w-sm space-y-2 rounded-xl border bg-card p-6 shadow-lg relative overflow-hidden min-h-[520px]">
+    <div className="w-full max-w-sm space-y-2 rounded-xl border bg-card p-6 shadow-lg relative h-[580px]">
       <div className="absolute -top-10 -right-10 w-40 h-40 bg-yellow-200 rounded-full filter blur-3xl opacity-20"></div>
       <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-200 rounded-full filter blur-3xl opacity-20"></div>
 
+      {/* Sign In Section */}
       <div
         className={cn(
-          "space-y-4 transition-all duration-500 absolute inset-0 p-6",
+          "space-y-2.5 transition-all duration-500 absolute inset-0 p-6",
           showSignUp
             ? "opacity-0 -translate-y-4 pointer-events-none"
             : "opacity-100 translate-y-0 pointer-events-auto"
         )}
       >
-        <div className="text-center mb-6">
+        <div className="text-center mb-3">
           <h3 className="text-2xl font-bold">Sign In</h3>
           <p className="text-sm text-muted-foreground mt-1">
             {forEmployers
@@ -275,7 +283,7 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
           </p>
         </div>
 
-        <form onSubmit={handleSignIn} className="space-y-4">
+        <form onSubmit={handleSignIn} className="space-y-2.5">
           <div className="space-y-2">
             <div className="relative">
               <Input
@@ -284,21 +292,21 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
                 placeholder="Email address"
                 className={cn(
                   "h-11",
-                  signInEmailError &&
+                  signInForm.errors.email &&
                     "border-red-500 focus-visible:ring-red-500"
                 )}
-                value={signInEmail}
-                onChange={(e) => setSignInEmail(e.target.value)}
+                value={signInForm.formData.email}
+                onChange={(e) => signInForm.setField("email", e.target.value)}
               />
-              {signInEmailError && (
+              {signInForm.errors.email && (
                 <div
                   className={cn(
                     "text-xs text-red-500 mt-1 flex items-center gap-1",
-                    showSignInErrors ? "animate-shake" : ""
+                    signInForm.showErrors ? "animate-shake" : ""
                   )}
                 >
                   <AlertCircle className="h-3 w-3" />
-                  {signInEmailError}
+                  {signInForm.errors.email}
                 </div>
               )}
             </div>
@@ -311,11 +319,13 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
                 placeholder="Password"
                 className={cn(
                   "h-11",
-                  signInPasswordError &&
+                  signInForm.errors.password &&
                     "border-red-500 focus-visible:ring-red-500"
                 )}
-                value={signInPassword}
-                onChange={(e) => setSignInPassword(e.target.value)}
+                value={signInForm.formData.password}
+                onChange={(e) =>
+                  signInForm.setField("password", e.target.value)
+                }
               />
               <Button
                 variant="ghost"
@@ -333,15 +343,15 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
                   {showPassword ? "Hide password" : "Show password"}
                 </span>
               </Button>
-              {signInPasswordError && (
+              {signInForm.errors.password && (
                 <div
                   className={cn(
                     "text-xs text-red-500 mt-1 flex items-center gap-1",
-                    showSignInErrors ? "animate-shake" : ""
+                    signInForm.showErrors ? "animate-shake" : ""
                   )}
                 >
                   <AlertCircle className="h-3 w-3" />
-                  {signInPasswordError}
+                  {signInForm.errors.password}
                 </div>
               )}
             </div>
@@ -354,9 +364,9 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
           <Button
             className="w-full bg-yellow-500 hover:bg-yellow-600 text-black relative overflow-hidden group h-11"
             type="submit"
-            disabled={isSigningIn}
+            disabled={signInForm.isLoading}
           >
-            {isSigningIn ? (
+            {signInForm.isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
                 Signing In...
@@ -372,7 +382,7 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
           </Button>
         </form>
 
-        <div className="relative flex items-center justify-center mt-6">
+        <div className="relative flex items-center justify-center">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t"></div>
           </div>
@@ -390,15 +400,16 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
         </Button>
       </div>
 
+      {/* Sign Up Section */}
       <div
         className={cn(
-          "space-y-4 transition-all duration-500 absolute inset-0 p-6 overflow-y-auto",
+          "space-y-2.5 transition-all duration-500 absolute inset-0 p-6",
           !showSignUp
             ? "opacity-0 translate-y-4 pointer-events-none"
             : "opacity-100 translate-y-0 pointer-events-auto"
         )}
       >
-        <div className="text-center mb-6">
+        <div className="text-center mb-3">
           <h3 className="text-2xl font-bold">Create Account</h3>
           <p className="text-sm text-muted-foreground mt-1">
             {forEmployers
@@ -407,7 +418,7 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
           </p>
         </div>
 
-        <form onSubmit={handleSignUp} className="space-y-4">
+        <form onSubmit={handleSignUp} className="space-y-2.5">
           <div className="space-y-2">
             <div className="relative">
               <Input
@@ -415,20 +426,21 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
                 placeholder={forEmployers ? "Company name" : "Full name"}
                 className={cn(
                   "h-11",
-                  signUpNameError && "border-red-500 focus-visible:ring-red-500"
+                  signUpForm.errors.name &&
+                    "border-red-500 focus-visible:ring-red-500"
                 )}
-                value={signUpName}
-                onChange={(e) => setSignUpName(e.target.value)}
+                value={(signUpForm.formData as SignUpFormData).name}
+                onChange={(e) => signUpForm.setField("name", e.target.value)}
               />
-              {signUpNameError && (
+              {signUpForm.errors.name && (
                 <div
                   className={cn(
                     "text-xs text-red-500 mt-1 flex items-center gap-1",
-                    showSignUpErrors ? "animate-shake" : ""
+                    signUpForm.showErrors ? "animate-shake" : ""
                   )}
                 >
                   <AlertCircle className="h-3 w-3" />
-                  {signUpNameError}
+                  {signUpForm.errors.name}
                 </div>
               )}
             </div>
@@ -441,53 +453,56 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
                 placeholder="Work email"
                 className={cn(
                   "h-11",
-                  signUpEmailError &&
+                  signUpForm.errors.email &&
                     "border-red-500 focus-visible:ring-red-500"
                 )}
-                value={signUpEmail}
-                onChange={(e) => setSignUpEmail(e.target.value)}
+                value={signUpForm.formData.email}
+                onChange={(e) => signUpForm.setField("email", e.target.value)}
               />
-              {signUpEmailError && (
+              {signUpForm.errors.email && (
                 <div
                   className={cn(
                     "text-xs text-red-500 mt-1 flex items-center gap-1",
-                    showSignUpErrors ? "animate-shake" : ""
+                    signUpForm.showErrors ? "animate-shake" : ""
                   )}
                 >
                   <AlertCircle className="h-3 w-3" />
-                  {signUpEmailError}
+                  {signUpForm.errors.email}
                 </div>
               )}
             </div>
           </div>
-          <div className="space-y-2">
-            <div className="relative">
-              <Input
-                id="dob-signup"
-                type="date"
-                placeholder="Date of birth"
-                className={cn(
-                  "h-11",
-                  signUpDobError && "border-red-500 focus-visible:ring-red-500",
-                  "calendar-enhanced" // Custom class for styling
+          {!forEmployers && (
+            <div className="space-y-2">
+              <div className="relative">
+                <Input
+                  id="dob-signup"
+                  type="date"
+                  placeholder="Date of birth"
+                  className={cn(
+                    "h-11",
+                    signUpForm.errors.dob &&
+                      "border-red-500 focus-visible:ring-red-500",
+                    "calendar-enhanced" // Custom class for styling
+                  )}
+                  onFocus={handleDateFocus}
+                  value={(signUpForm.formData as SignUpFormData).dob}
+                  onChange={(e) => signUpForm.setField("dob", e.target.value)}
+                />
+                {signUpForm.errors.dob && (
+                  <div
+                    className={cn(
+                      "text-xs text-red-500 mt-1 flex items-center gap-1",
+                      signUpForm.showErrors ? "animate-shake" : ""
+                    )}
+                  >
+                    <AlertCircle className="h-3 w-3" />
+                    {signUpForm.errors.dob}
+                  </div>
                 )}
-                onFocus={handleDateFocus}
-                value={signUpDob}
-                onChange={(e) => setSignUpDob(e.target.value)}
-              />
-              {signUpDobError && (
-                <div
-                  className={cn(
-                    "text-xs text-red-500 mt-1 flex items-center gap-1",
-                    showSignUpErrors ? "animate-shake" : ""
-                  )}
-                >
-                  <AlertCircle className="h-3 w-3" />
-                  {signUpDobError}
-                </div>
-              )}
+              </div>
             </div>
-          </div>
+          )}
           <div className="space-y-2">
             <div className="relative">
               <Input
@@ -496,11 +511,13 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
                 placeholder="Create password"
                 className={cn(
                   "h-11",
-                  signUpPasswordError &&
+                  signUpForm.errors.password &&
                     "border-red-500 focus-visible:ring-red-500"
                 )}
-                value={signUpPassword}
-                onChange={(e) => setSignUpPassword(e.target.value)}
+                value={signUpForm.formData.password}
+                onChange={(e) =>
+                  signUpForm.setField("password", e.target.value)
+                }
               />
               <Button
                 variant="ghost"
@@ -518,15 +535,15 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
                   {showPassword ? "Hide password" : "Show password"}
                 </span>
               </Button>
-              {signUpPasswordError && (
+              {signUpForm.errors.password && (
                 <div
                   className={cn(
                     "text-xs text-red-500 mt-1 flex items-center gap-1",
-                    showSignUpErrors ? "animate-shake" : ""
+                    signUpForm.showErrors ? "animate-shake" : ""
                   )}
                 >
                   <AlertCircle className="h-3 w-3" />
-                  {signUpPasswordError}
+                  {signUpForm.errors.password}
                 </div>
               )}
             </div>
@@ -534,9 +551,9 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
           <Button
             className="w-full bg-yellow-500 hover:bg-yellow-600 text-black relative overflow-hidden group h-11"
             type="submit"
-            disabled={isSigningUp}
+            disabled={signUpForm.isLoading}
           >
-            {isSigningUp ? (
+            {signUpForm.isLoading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
                 Creating Account...
@@ -550,19 +567,19 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
               </>
             )}
           </Button>
-          <p className="text-xs text-center text-muted-foreground">
+          <p className="text-[11px] text-center text-muted-foreground">
             By signing up, you agree to our{" "}
-            <Button variant="link" className="h-auto p-0 text-xs" size="sm">
+            <Button variant="link" className="h-auto p-0 text-[11px]" size="sm">
               Terms of Service
             </Button>{" "}
             and{" "}
-            <Button variant="link" className="h-auto p-0 text-xs" size="sm">
+            <Button variant="link" className="h-auto p-0 text-[11px]" size="sm">
               Privacy Policy
             </Button>
           </p>
         </form>
 
-        <div className="relative flex items-center justify-center mt-6">
+        <div className="relative flex items-center justify-center">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t"></div>
           </div>

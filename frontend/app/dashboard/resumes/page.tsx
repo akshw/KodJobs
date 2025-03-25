@@ -1,30 +1,30 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { ResumeManager } from "@/components/resume-manager"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react";
+import { ResumeManager } from "@/components/resume-manager";
+import { useRouter } from "next/navigation";
 
 export default function ResumesPage() {
-  const router = useRouter()
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Check login status on component mount
   useEffect(() => {
     try {
-      const loggedIn = localStorage.getItem("isLoggedIn") === "true"
-      setIsLoggedIn(loggedIn)
+      const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+      setIsLoggedIn(loggedIn);
 
       // Redirect if not logged in
       if (!loggedIn) {
-        router.push("/")
+        router.push("/");
       }
     } catch (error) {
-      console.error("Error checking login status:", error)
+      console.error("Error checking login status:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }, [router])
+  }, [router]);
 
   if (isLoading) {
     return (
@@ -34,11 +34,11 @@ export default function ResumesPage() {
           <div className="h-4 w-32 bg-muted rounded"></div>
         </div>
       </div>
-    )
+    );
   }
 
   if (!isLoggedIn) {
-    return null // Will redirect in useEffect
+    return null; // Will redirect in useEffect
   }
 
   return (
@@ -46,25 +46,36 @@ export default function ResumesPage() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <a href="/" className="flex items-center gap-2 group">
+            <link href="/" className="flex items-center gap-2 group">
               <span className="text-2xl font-bold">
-                <span className="text-black group-hover:animate-text-gradient transition-all duration-300">Kod</span>
+                <span className="text-black group-hover:animate-text-gradient transition-all duration-300">
+                  Kod
+                </span>
                 <span className="text-yellow-500 group-hover:animate-text-gradient transition-all duration-300">
                   Jobs
                 </span>
               </span>
-            </a>
+            </link>
           </div>
           <nav className="hidden md:flex items-center gap-6">
-            <a href="/dashboard" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
+            <a
+              href="/dashboard"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
               Dashboard
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </a>
-            <a href="#" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
+            <a
+              href="#"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
               My Applications
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </a>
-            <a href="#" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
+            <a
+              href="#"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
               Saved Jobs
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </a>
@@ -92,19 +103,27 @@ export default function ResumesPage() {
             &copy; {new Date().getFullYear()} KodJobs. All rights reserved.
           </p>
           <div className="flex gap-4">
-            <a href="#" className="text-sm text-muted-foreground hover:underline">
+            <a
+              href="#"
+              className="text-sm text-muted-foreground hover:underline"
+            >
               Terms
             </a>
-            <a href="#" className="text-sm text-muted-foreground hover:underline">
+            <a
+              href="#"
+              className="text-sm text-muted-foreground hover:underline"
+            >
               Privacy
             </a>
-            <a href="#" className="text-sm text-muted-foreground hover:underline">
+            <a
+              href="#"
+              className="text-sm text-muted-foreground hover:underline"
+            >
               Contact
             </a>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }
-

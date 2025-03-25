@@ -16,22 +16,14 @@ const express_1 = __importDefault(require("express"));
 const client_1 = require("@prisma/client");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../config");
-const zod_1 = require("zod");
 const bcrypt_1 = __importDefault(require("bcrypt"));
-const types_1 = require("../types");
+const middleware_1 = __importDefault(require("../middleware"));
 const router = express_1.default.Router();
 const prisma = new client_1.PrismaClient();
 router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // const validatedData = SignupBody.safeParse(req.body);
-        // if (!validatedData.success) {
-        //   return res.status(400).json({
-        //     message: "Invalid input data",
-        //     errors: validatedData.error.errors,
-        //   });
-        // }
-        const { email, password, companyName, requirement } = req.body;
-        const existingUser = yield prisma.user.findUnique({
+        const { email, password, companyname } = req.body;
+        const existingUser = yield prisma.employer.findUnique({
             where: { email },
         });
         if (existingUser) {
@@ -44,8 +36,7 @@ router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function*
             data: {
                 email,
                 password: hashedPassword,
-                companyName,
-                requirement,
+                companyName: companyname,
             },
         });
         const token = jsonwebtoken_1.default.sign({ userId: newUser.id }, config_1.JWT_SECRET, {
@@ -61,10 +52,10 @@ router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function*
         });
     }
     catch (error) {
-        if (error instanceof zod_1.z.ZodError) {
+        if (error) {
             return res.status(400).json({
                 message: "Validation failed",
-                errors: error.errors,
+                errors: error,
             });
         }
         console.error("Signup error:", error);
@@ -73,17 +64,10 @@ router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function*
         });
     }
 }));
-router.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/signin", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const validatedData = types_1.SigninBody.safeParse(req.body);
-        if (!validatedData.success) {
-            return res.status(400).json({
-                message: "Invalid input data",
-                errors: validatedData.error.errors,
-            });
-        }
-        const { email, password } = validatedData.data;
-        const user = yield prisma.user.findUnique({
+        const { email, password } = req.body;
+        const user = yield prisma.employer.findUnique({
             where: { email },
         });
         if (!user) {
@@ -105,12 +89,46 @@ router.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function*
             token,
             user: {
                 email: user.email,
-                name: user.name,
+                name: user.companyName,
             },
         });
     }
     catch (error) {
         console.error("Signin error:", error);
+        return res.status(500).json({
+            message: "Internal server error",
+        });
+    }
+}));
+router.post("/require", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { requirement } = req.body;
+        const userId = req.userId;
+        if (!requirement) {
+            return res.status(400).json({
+                message: "Requirement is required",
+            });
+        }
+        if (!userId) {
+            return res.status(401).json({
+                message: "Unauthorized",
+            });
+        }
+        const updatedUser = yield prisma.employer.update({
+            where: { id: userId },
+            data: { requirement },
+        });
+        return res.status(200).json({
+            message: "Requirement updated successfully",
+            user: {
+                email: updatedUser.email,
+                name: updatedUser.companyName,
+                requirement: updatedUser.requirement,
+            },
+        });
+    }
+    catch (error) {
+        console.error("Requirement update error:", error);
         return res.status(500).json({
             message: "Internal server error",
         });

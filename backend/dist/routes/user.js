@@ -15,12 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const client_1 = require("@prisma/client");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const config_1 = require("../config");
 const zod_1 = require("zod");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const client_s3_1 = require("@aws-sdk/client-s3");
 const s3_request_presigner_1 = require("@aws-sdk/s3-request-presigner");
 const types_1 = require("../types");
+const middleware_1 = __importDefault(require("../middleware"));
+const config_1 = require("../config");
 const router = express_1.default.Router();
 const prisma = new client_1.PrismaClient();
 const s3Client = new client_s3_1.S3Client({
@@ -132,11 +133,11 @@ router.post("/signin", (req, res) => __awaiter(void 0, void 0, void 0, function*
         });
     }
 }));
-router.get("/upload", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/upload", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Generate unique file key
         //@ts-ignore
-        const fileKey = `uploads/${Date.now()}-${req.userId}.pdf`;
+        const fileKey = `uploads${req.userId}.pdf`;
         const command = new client_s3_1.PutObjectCommand({
             Bucket: "kodjobs2",
             Key: fileKey,
@@ -162,6 +163,54 @@ router.get("/upload", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     catch (error) {
         console.error("Upload error:", error);
         res.status(500).json({ message: "Internal server error" });
+    }
+}));
+router.get("/me", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield prisma.user.findUnique({
+            // @ts-ignore
+            where: { id: req.userId },
+            select: { email: true, name: true },
+        });
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+        return res.json(user);
+    }
+    catch (error) {
+        console.error("Me error:", error);
+        return res.status(500).json({
+            message: "Internal server error",
+        });
+    }
+}));
+router.get("/profile", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const user = yield prisma.user.findUnique({
+            // @ts-ignore
+            where: { id: req.userId },
+            select: {
+                email: true,
+                name: true,
+                age: true,
+                resumeUrl: true,
+                matches: true,
+            },
+        });
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+            });
+        }
+        return res.json(user);
+    }
+    catch (error) {
+        console.error("Profile error:", error);
+        return res.status(500).json({
+            message: "Internal server error",
+        });
     }
 }));
 exports.default = router;

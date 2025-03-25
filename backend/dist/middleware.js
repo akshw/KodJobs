@@ -6,8 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("./config");
 function authMiddleware(req, res, next) {
-    const authHeader = req.header.authorization;
+    const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        console.log("no header");
         return res.status(400).json({
             msg: "authorization failed",
         });
@@ -19,6 +20,7 @@ function authMiddleware(req, res, next) {
         next();
     }
     catch (error) {
+        console.log("decode failed");
         console.log(error);
         res.status(400).json({
             msg: "authorization failed",

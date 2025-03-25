@@ -2,9 +2,7 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config";
-import { z } from "zod";
 import bcrypt from "bcrypt";
-import { SignupBody, SigninBody } from "../types";
 import authMiddleware from "../middleware";
 
 const router = express.Router();
@@ -12,17 +10,9 @@ const prisma = new PrismaClient();
 
 router.post("/signup", async (req, res) => {
   try {
-    // const validatedData = SignupBody.safeParse(req.body);
+    const { email, password, companyname } = req.body;
 
-    // if (!validatedData.success) {
-    //   return res.status(400).json({
-    //     message: "Invalid input data",
-    //     errors: validatedData.error.errors,
-    //   });
-    // }
-    const { email, password, companyName, requirement } = req.body;
-
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await prisma.employer.findUnique({
       where: { email },
     });
 
@@ -38,8 +28,7 @@ router.post("/signup", async (req, res) => {
       data: {
         email,
         password: hashedPassword,
-        companyName,
-        requirement,
+        companyName: companyname,
       },
     });
 
@@ -56,10 +45,10 @@ router.post("/signup", async (req, res) => {
       },
     });
   } catch (error) {
-    if (error instanceof z.ZodError) {
+    if (error) {
       return res.status(400).json({
         message: "Validation failed",
-        errors: error.errors,
+        errors: error,
       });
     }
     console.error("Signup error:", error);
@@ -69,20 +58,11 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-router.post("/signin", async (req, res) => {
+router.post("/signin", authMiddleware, async (req, res) => {
   try {
-    const validatedData = SigninBody.safeParse(req.body);
+    const { email, password } = req.body;
 
-    if (!validatedData.success) {
-      return res.status(400).json({
-        message: "Invalid input data",
-        errors: validatedData.error.errors,
-      });
-    }
-
-    const { email, password } = validatedData.data;
-
-    const user = await prisma.user.findUnique({
+    const user = await prisma.employer.findUnique({
       where: { email },
     });
 
@@ -109,11 +89,48 @@ router.post("/signin", async (req, res) => {
       token,
       user: {
         email: user.email,
-        name: user.name,
+        name: user.companyName,
       },
     });
   } catch (error) {
     console.error("Signin error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+});
+
+router.post("/require", authMiddleware, async (req, res) => {
+  try {
+    const { requirement } = req.body;
+    const userId = (req as any).userId;
+
+    if (!requirement) {
+      return res.status(400).json({
+        message: "Requirement is required",
+      });
+    }
+    if (!userId) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
+    const updatedUser = await prisma.employer.update({
+      where: { id: userId },
+      data: { requirement },
+    });
+
+    return res.status(200).json({
+      message: "Requirement updated successfully",
+      user: {
+        email: updatedUser.email,
+        name: updatedUser.companyName,
+        requirement: updatedUser.requirement,
+      },
+    });
+  } catch (error) {
+    console.error("Requirement update error:", error);
     return res.status(500).json({
       message: "Internal server error",
     });

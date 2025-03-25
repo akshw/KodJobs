@@ -2,8 +2,9 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "./config";
 
 function authMiddleware(req: any, res: any, next: any) {
-  const authHeader = req.header.authorization;
+  const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    console.log("no header");
     return res.status(400).json({
       msg: "authorization failed",
     });
@@ -17,6 +18,7 @@ function authMiddleware(req: any, res: any, next: any) {
     req.userId = decoded.userId;
     next();
   } catch (error) {
+    console.log("decode failed");
     console.log(error);
     res.status(400).json({
       msg: "authorization failed",

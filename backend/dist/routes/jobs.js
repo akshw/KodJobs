@@ -15,10 +15,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const axios_1 = __importDefault(require("axios"));
 const client_1 = require("@prisma/client");
+const middleware_1 = __importDefault(require("../middleware"));
+const app = (0, express_1.default)();
+app.use(express_1.default.json());
 const router = express_1.default.Router();
 const prisma = new client_1.PrismaClient();
 const jobId = [];
-router.get("/jobs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/jobs", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const jobid_res = yield axios_1.default.get("https://hacker-news.firebaseio.com/v0/jobstories.json", { timeout: 5000 });
         const ids = jobid_res.data;

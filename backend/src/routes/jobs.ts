@@ -1,13 +1,17 @@
 import express from "express";
 import axios from "axios";
 import { PrismaClient } from "@prisma/client";
+import authMiddleware from "../middleware";
+
+const app = express();
+app.use(express.json());
 
 const router = express.Router();
 const prisma = new PrismaClient();
 
 const jobId: number[] = [];
 
-router.get("/jobs", async (req, res) => {
+router.get("/jobs", authMiddleware, async (req, res) => {
   try {
     const jobid_res = await axios.get(
       "https://hacker-news.firebaseio.com/v0/jobstories.json",

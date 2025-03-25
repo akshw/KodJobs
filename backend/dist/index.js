@@ -20,6 +20,9 @@ const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use("/api", index_1.default);
+app.get("/", (req, res) => {
+    res.send("Home");
+});
 app.get("/health", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log("healthy");
     res.send("healthy");

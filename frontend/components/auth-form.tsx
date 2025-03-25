@@ -1,22 +1,21 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Eye, EyeOff } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Eye, EyeOff } from "lucide-react";
 
 export function AuthForm() {
-  const [showPassword, setShowPassword] = useState(false)
-  const [activeTab, setActiveTab] = useState("signin")
+  const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword)
-  }
+    setShowPassword(!showPassword);
+  };
 
   return (
-    <Tabs defaultValue="signin" className="w-full" onValueChange={setActiveTab}>
+    <Tabs defaultValue="signin" className="w-full">
       <TabsList className="grid w-full grid-cols-2 mb-4">
         <TabsTrigger value="signin">Sign In</TabsTrigger>
         <TabsTrigger value="signup">Sign Up</TabsTrigger>
@@ -24,7 +23,11 @@ export function AuthForm() {
       <TabsContent value="signin" className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email-signin">Email</Label>
-          <Input id="email-signin" type="email" placeholder="name@example.com" />
+          <Input
+            id="email-signin"
+            type="email"
+            placeholder="name@example.com"
+          />
         </div>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
@@ -34,7 +37,11 @@ export function AuthForm() {
             </Button>
           </div>
           <div className="relative">
-            <Input id="password-signin" type={showPassword ? "text" : "password"} placeholder="••••••••" />
+            <Input
+              id="password-signin"
+              type={showPassword ? "text" : "password"}
+              placeholder="••••••••"
+            />
             <Button
               variant="ghost"
               size="icon"
@@ -47,7 +54,9 @@ export function AuthForm() {
               ) : (
                 <Eye className="h-4 w-4 text-muted-foreground" />
               )}
-              <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+              <span className="sr-only">
+                {showPassword ? "Hide password" : "Show password"}
+              </span>
             </Button>
           </div>
         </div>
@@ -62,12 +71,20 @@ export function AuthForm() {
         </div>
         <div className="space-y-2">
           <Label htmlFor="email-signup">Email</Label>
-          <Input id="email-signup" type="email" placeholder="name@example.com" />
+          <Input
+            id="email-signup"
+            type="email"
+            placeholder="name@example.com"
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="password-signup">Password</Label>
           <div className="relative">
-            <Input id="password-signup" type={showPassword ? "text" : "password"} placeholder="••••••••" />
+            <Input
+              id="password-signup"
+              type={showPassword ? "text" : "password"}
+              placeholder="••••••••"
+            />
             <Button
               variant="ghost"
               size="icon"
@@ -80,11 +97,17 @@ export function AuthForm() {
               ) : (
                 <Eye className="h-4 w-4 text-muted-foreground" />
               )}
-              <span className="sr-only">{showPassword ? "Hide password" : "Show password"}</span>
+              <span className="sr-only">
+                {showPassword ? "Hide password" : "Show password"}
+              </span>
             </Button>
           </div>
         </div>
-        <Button className="w-full" type="submit">
+        <Button
+          onClick={() => alert("clicked")}
+          className="w-full"
+          type="submit"
+        >
           Create Account
         </Button>
         <p className="text-xs text-center text-muted-foreground">
@@ -99,6 +122,5 @@ export function AuthForm() {
         </p>
       </TabsContent>
     </Tabs>
-  )
+  );
 }
-

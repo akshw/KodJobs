@@ -1,11 +1,18 @@
-import Link from "next/link"
-import { AuthSection } from "@/components/auth-section"
-import { StatsCounter } from "@/components/stats-counter"
-import { FeatureCard } from "@/components/feature-card"
-import { Button } from "@/components/ui/button"
-import { HeroBackground } from "@/components/hero-background"
-import { TalentMatchingSection } from "@/components/talent-matching-section"
-import { Users, ChevronRight, BrainCircuit, Search, Clock, UserCheck } from "lucide-react"
+import Link from "next/link";
+import { AuthSection } from "@/components/auth-section";
+import { StatsCounter } from "@/components/stats-counter";
+import { FeatureCard } from "@/components/feature-card";
+import { Button } from "@/components/ui/button";
+import { HeroBackground } from "@/components/hero-background";
+import { TalentMatchingSection } from "@/components/talent-matching-section";
+import {
+  Users,
+  ChevronRight,
+  BrainCircuit,
+  Search,
+  Clock,
+  UserCheck,
+} from "lucide-react";
 
 export default function HirePage() {
   return (
@@ -15,7 +22,9 @@ export default function HirePage() {
           <div className="flex items-center gap-2">
             <Link href="/" className="flex items-center gap-2 group">
               <span className="text-2xl font-bold">
-                <span className="text-black group-hover:animate-text-gradient transition-all duration-300">Kod</span>
+                <span className="text-black group-hover:animate-text-gradient transition-all duration-300">
+                  Kod
+                </span>
                 <span className="text-yellow-500 group-hover:animate-text-gradient transition-all duration-300">
                   Jobs
                 </span>
@@ -23,29 +32,50 @@ export default function HirePage() {
             </Link>
           </div>
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="/" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
+            <Link
+              href="/"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
               For Job Seekers
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <Link href="#" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
+            <Link
+              href="#"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
               Pricing
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <Link href="#" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
+            <Link
+              href="#"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
               Success Stories
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <Link href="#" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
+            <Link
+              href="#"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
               Resources
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </Link>
           </nav>
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="outline" size="sm" className="group overflow-hidden relative">
-              <span className="relative z-10 group-hover:text-white transition-colors duration-300">Browse Talent</span>
+            <Button
+              variant="outline"
+              size="sm"
+              className="group overflow-hidden relative"
+            >
+              <span className="relative z-10 group-hover:text-white transition-colors duration-300">
+                Browse Talent
+              </span>
               <span className="absolute inset-0 bg-yellow-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
             </Button>
-            <Button size="sm" className="bg-yellow-500 hover:bg-yellow-600 text-black">
+            <Button
+              size="sm"
+              className="bg-yellow-500 hover:bg-yellow-600 text-black"
+            >
               Post a Job
             </Button>
           </div>
@@ -71,14 +101,20 @@ export default function HirePage() {
                         viewBox="0 0 100 10"
                         preserveAspectRatio="none"
                       >
-                        <path d="M0,5 Q25,0 50,5 T100,5" fill="none" stroke="currentColor" strokeWidth="2" />
+                        <path
+                          d="M0,5 Q25,0 50,5 T100,5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        />
                       </svg>
                     </span>
                     For Your Team
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl animate-fadeIn delay-100">
-                    Our AI matches your job requirements with qualified candidates, saving you time and resources in the
-                    hiring process.
+                    Our AI matches your job requirements with qualified
+                    candidates, saving you time and resources in the hiring
+                    process.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row animate-fadeIn delay-200">
@@ -90,7 +126,11 @@ export default function HirePage() {
                     <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
                     <span className="absolute inset-0 bg-yellow-600 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
                   </Button>
-                  <Button variant="outline" size="lg" className="group relative overflow-hidden">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="group relative overflow-hidden"
+                  >
                     <span className="relative z-10 group-hover:text-white transition-colors duration-300">
                       Browse Talent
                     </span>
@@ -101,9 +141,10 @@ export default function HirePage() {
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 pt-6 animate-fadeIn delay-300">
                   <StatsCounter
                     icon={<Users className="h-5 w-5 text-yellow-500" />}
-                    value={50000}
+                    value={1000}
+                    suffix="+"
                     label="Active Candidates"
-                    duration={2000}
+                    duration={1000}
                   />
                   <StatsCounter
                     icon={<Clock className="h-5 w-5 text-yellow-500" />}
@@ -141,7 +182,8 @@ export default function HirePage() {
                   Streamline Your Hiring Process
                 </h2>
                 <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed">
-                  Our platform helps you find the right candidates faster and more efficiently.
+                  Our platform helps you find the right candidates faster and
+                  more efficiently.
                 </p>
               </div>
             </div>
@@ -178,8 +220,8 @@ export default function HirePage() {
                   Find the Perfect Fit
                 </h2>
                 <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed relative z-10">
-                  Whether you need full-time employees, contractors, or remote workers, we have the talent pool to meet
-                  your needs.
+                  Whether you need full-time employees, contractors, or remote
+                  workers, we have the talent pool to meet your needs.
                 </p>
                 <div className="relative z-10">
                   <Button
@@ -197,13 +239,20 @@ export default function HirePage() {
                 <div className="inline-block rounded-lg bg-yellow-100 px-3 py-1 text-sm text-yellow-800 relative z-10">
                   Enterprise Solutions
                 </div>
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight relative z-10">Scale Your Team</h2>
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight relative z-10">
+                  Scale Your Team
+                </h2>
                 <p className="max-w-[600px] text-muted-foreground md:text-xl/relaxed relative z-10">
-                  Custom hiring solutions for enterprises with high volume recruitment needs. Our dedicated account
-                  managers help you scale efficiently.
+                  Custom hiring solutions for enterprises with high volume
+                  recruitment needs. Our dedicated account managers help you
+                  scale efficiently.
                 </p>
                 <div className="relative z-10">
-                  <Button size="lg" variant="outline" className="gap-1 group relative overflow-hidden">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="gap-1 group relative overflow-hidden"
+                  >
                     <span className="relative z-10 group-hover:text-white transition-colors duration-300">
                       Contact Sales
                     </span>
@@ -230,12 +279,18 @@ export default function HirePage() {
                       viewBox="0 0 100 10"
                       preserveAspectRatio="none"
                     >
-                      <path d="M0,5 Q25,0 50,5 T100,5" fill="none" stroke="currentColor" strokeWidth="2" />
+                      <path
+                        d="M0,5 Q25,0 50,5 T100,5"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      />
                     </svg>
                   </span>
                 </h2>
                 <p className="mx-auto max-w-[700px] text-gray-400 md:text-xl/relaxed">
-                  Join thousands of companies who've found their perfect tech talent through KodJobs.
+                  Join thousands of companies who have found their perfect tech
+                  talent through KodJobs.
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -247,9 +302,15 @@ export default function HirePage() {
                   <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
                   <span className="absolute inset-0 bg-yellow-600 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
                 </Button>
-                <Button variant="outline" size="lg" className="border-white hover:bg-white/10 group">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="border-white hover:bg-white/10 group"
+                >
                   <span>Schedule a Demo</span>
-                  <span className="ml-2 inline-block group-hover:translate-x-0.5 transition-transform">→</span>
+                  <span className="ml-2 inline-block group-hover:translate-x-0.5 transition-transform">
+                    →
+                  </span>
                 </Button>
               </div>
             </div>
@@ -262,19 +323,27 @@ export default function HirePage() {
             &copy; {new Date().getFullYear()} KodJobs. All rights reserved.
           </p>
           <div className="flex gap-4">
-            <Link href="#" className="text-sm text-muted-foreground hover:underline">
+            <Link
+              href="#"
+              className="text-sm text-muted-foreground hover:underline"
+            >
               Terms
             </Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:underline">
+            <Link
+              href="#"
+              className="text-sm text-muted-foreground hover:underline"
+            >
               Privacy
             </Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:underline">
+            <Link
+              href="#"
+              className="text-sm text-muted-foreground hover:underline"
+            >
               Contact
             </Link>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }
-

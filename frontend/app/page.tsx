@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { AuthSection } from "@/components/auth-section";
 import { StatsCounter } from "@/components/stats-counter";
@@ -5,7 +6,6 @@ import { FeatureCard } from "@/components/feature-card";
 import { Button } from "@/components/ui/button";
 import { AIMatchingSection } from "@/components/ai-matching-section";
 import { HeroBackground } from "@/components/hero-background";
-import { UploadResumeButton } from "@/components/upload-resume-button";
 import {
   Briefcase,
   Building2,
@@ -43,6 +43,7 @@ export default function Home() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </Link>
             <Link
+              onClick={() => alert("Sign in to browse jobs")}
               href="#"
               className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
             >
@@ -50,14 +51,14 @@ export default function Home() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </Link>
             <Link
-              href="#"
+              href="https://www.kodnest.com"
               className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
             >
               Resources
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </Link>
             <Link
-              href="#"
+              href="https://www.kodnest.com/blog"
               className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
             >
               Blog
@@ -65,14 +66,10 @@ export default function Home() {
             </Link>
           </nav>
           <div className="hidden md:flex items-center gap-4">
-            <UploadResumeButton
-              variant="outline"
-              size="sm"
-              className="group overflow-hidden relative"
-            />
             <Button
               size="sm"
               className="bg-yellow-500 hover:bg-yellow-600 text-black"
+              onClick={() => alert("Sign in to get started")}
             >
               Get Started
             </Button>
@@ -80,7 +77,6 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Rest of the page content remains the same */}
       <main className="flex-1">
         <section className="w-full py-6 md:py-12 lg:py-16 relative overflow-hidden">
           <HeroBackground />
@@ -93,7 +89,7 @@ export default function Home() {
                 </div>
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none animate-slideUp">
-                    Find Your Next
+                    Find Your Best
                     <span className="block text-yellow-500 relative">
                       Tech Career
                       <svg
@@ -113,43 +109,62 @@ export default function Home() {
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl animate-fadeIn delay-100">
                     Our AI analyzes your resume and skills to deliver
-                    personalized job recommendations that match your career
-                    goals.
+                    personalized job recommendations that match you the best.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row animate-fadeIn delay-200">
                   <Button
                     size="lg"
                     className="gap-1 group relative overflow-hidden bg-yellow-500 hover:bg-yellow-500 text-black"
+                    onClick={() => alert("Sign in to browse jobs")}
                   >
                     <span className="relative z-10">Browse Jobs</span>
                     <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
                     <span className="absolute inset-0 bg-yellow-600 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
                   </Button>
-                  <UploadResumeButton
-                    variant="outline"
+                  {/* <Button
                     size="lg"
-                    className="group relative overflow-hidden"
-                  />
+                    className="gap-1 mx-10 group relative overflow-hidden bg-yellow-500 hover:bg-yellow-500 text-black"
+                    onClick={() => alert("Sign in and create profile")}
+                  >
+                    <span className="relative z-10">Create Profile</span>
+                    <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+                    <span className="absolute inset-0 bg-yellow-600 translate-x-full group-hover:translate-x-0 transition-transform duration-300"></span>
+                  </Button> */}
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="gap-1 mx-4 group relative overflow-hidden"
+                    asChild
+                    onClick={() => alert("Sign in to create profile")}
+                  >
+                    <Link href="">
+                      <span className="relative z-10 group-hover:text-white transition-colors duration-300">
+                        Create Profile
+                      </span>
+                      <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
+                      <span className="absolute inset-0 bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
+                    </Link>
+                  </Button>
                 </div>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 pt-6 animate-fadeIn delay-300">
                   <StatsCounter
                     icon={<Briefcase className="h-5 w-5 text-yellow-500" />}
-                    value={1000}
+                    value={100}
                     suffix="+"
                     label="Active Jobs"
-                    duration={100}
+                    duration={2000}
                   />
                   <StatsCounter
                     icon={<Building2 className="h-5 w-5 text-yellow-500" />}
-                    value={100}
+                    value={50}
                     suffix="+"
                     label="Companies"
                     duration={2000}
                   />
                   <StatsCounter
                     icon={<Users className="h-5 w-5 text-yellow-500" />}
-                    value={95}
+                    value={90}
                     suffix="%"
                     label="Placement Rate"
                     duration={2000}
@@ -165,7 +180,6 @@ export default function Home() {
 
         <AIMatchingSection />
 
-        {/* Rest of the sections remain the same */}
         <section className="w-full py-12 md:py-20 bg-gradient-to-b from-muted/30 to-muted/80">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -223,6 +237,7 @@ export default function Home() {
                   <Button
                     size="lg"
                     className="gap-1 group relative overflow-hidden bg-yellow-500 hover:bg-yellow-500 text-black"
+                    onClick={() => alert("Sign in to create profile")}
                   >
                     <span className="relative z-10">Create Profile</span>
                     <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
@@ -288,14 +303,15 @@ export default function Home() {
                   </span>
                 </h2>
                 <p className="mx-auto max-w-[700px] text-gray-400 md:text-xl/relaxed">
-                  Join thousands of tech professionals who've found their dream
-                  jobs through KodJobs.
+                  Join thousands of tech professionals who have found their
+                  dream jobs through KodJobs.
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 <Button
                   size="lg"
                   className="gap-1 bg-yellow-500 hover:bg-yellow-600 text-black group relative overflow-hidden"
+                  onClick={() => alert("Sign in to get started")}
                 >
                   <span className="relative z-10">Get Started</span>
                   <ChevronRight className="h-4 w-4 relative z-10 group-hover:translate-x-1 transition-transform" />
@@ -304,12 +320,14 @@ export default function Home() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="border-white hover:bg-white/10 group"
+                  className="border-white hover:bg-yellow-500 group text-black"
                 >
-                  <span>Learn More</span>
-                  <span className="ml-2 inline-block group-hover:translate-x-0.5 transition-transform">
-                    →
-                  </span>
+                  <Link href="https://www.kodnest.com/">
+                    <span>Learn More</span>
+                    <span className="ml-2 inline-block group-hover:translate-x-0.5 transition-transform">
+                      →
+                    </span>
+                  </Link>
                 </Button>
               </div>
             </div>

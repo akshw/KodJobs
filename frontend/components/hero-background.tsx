@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 
 export function HeroBackground() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  let animationFrameId: number;
+  const animationFrameIdRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -109,14 +109,14 @@ export function HeroBackground() {
       }
 
       connectParticles();
-      animationFrameId = requestAnimationFrame(animate);
+      animationFrameIdRef.current = requestAnimationFrame(animate);
     };
 
     animate();
 
     return () => {
       window.removeEventListener("resize", setCanvasDimensions);
-      cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(animationFrameIdRef.current as number);
     };
   }, []);
 

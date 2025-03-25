@@ -17,11 +17,12 @@ export const SignupBody = z.object({
     .min(2, { message: "Name must be at least 2 characters" })
     .max(50),
   dob: z.coerce.date().refine(
-    (date) => {
+    (dateString) => {
+      const date = new Date(dateString);
       const age = new Date().getFullYear() - date.getFullYear();
-      return age >= 13;
+      return !isNaN(date.getTime()) && age >= 18;
     },
-    { message: "You must be at least 13 years old" }
+    { message: "Invalid date or you must be at least 18 years old" }
   ),
 });
 

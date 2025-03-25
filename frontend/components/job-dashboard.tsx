@@ -34,6 +34,8 @@ interface JobCardProps {
   viewMode: string;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 const JobCard: React.FC<JobCardProps> = ({ job, viewMode }) => {
   // Use client-side formatting inside useEffect
   const [formattedDate, setFormattedDate] = useState<string>("");
@@ -141,9 +143,12 @@ export const JobDashboard: React.FC = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch(
-          "https://kodjobs-be.onrender.com/api/dashboard/jobs"
-        );
+        const response = await fetch(`${API_URL}/api/dashboard/jobs`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch jobs");
         }
