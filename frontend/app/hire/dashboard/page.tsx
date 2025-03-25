@@ -1,4 +1,5 @@
-import { CandidateProfiles } from "@/components/candidate-profiles"
+import { CandidateProfiles } from "@/components/candidate-profiles";
+import Link from "next/link";
 
 export default function HireDashboardPage() {
   return (
@@ -6,36 +7,50 @@ export default function HireDashboardPage() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <a href="/" className="flex items-center gap-2 group">
+            <Link href="/" className="flex items-center gap-2 group">
               <span className="text-2xl font-bold">
-                <span className="text-black group-hover:animate-text-gradient transition-all duration-300">Kod</span>
+                <span className="text-black group-hover:animate-text-gradient transition-all duration-300">
+                  Kod
+                </span>
                 <span className="text-yellow-500 group-hover:animate-text-gradient transition-all duration-300">
                   Jobs
                 </span>
               </span>
-            </a>
+            </Link>
           </div>
           <nav className="hidden md:flex items-center gap-6">
-            <a href="#" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
+            <a
+              href="#"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
               Dashboard
               <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-yellow-500 transition-all duration-300"></span>
             </a>
-            <a href="#" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
-              Job Postings
+            <Link
+              href="/hire/requirement"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
+              Requirements
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
-            </a>
-            <a href="#" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
+            </Link>
+            {/* <a
+              href="#"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
               Applications
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
-            </a>
-            <a href="#" className="text-sm font-medium hover:text-yellow-500 transition-colors relative group">
+            </a> */}
+            <a
+              href="#"
+              className="text-sm font-medium hover:text-yellow-500 transition-colors relative group"
+            >
               Company Profile
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-500 group-hover:w-full transition-all duration-300"></span>
             </a>
           </nav>
           <div className="hidden md:flex items-center gap-4">
             <div className="h-8 w-8 rounded-full bg-yellow-100 flex items-center justify-center">
-              <span className="text-yellow-800 font-medium text-sm">TC</span>
+              <span className="text-yellow-800 font-medium text-sm"></span>
             </div>
           </div>
         </div>
@@ -49,19 +64,27 @@ export default function HireDashboardPage() {
             &copy; {new Date().getFullYear()} KodJobs. All rights reserved.
           </p>
           <div className="flex gap-4">
-            <a href="#" className="text-sm text-muted-foreground hover:underline">
+            <a
+              href="#"
+              className="text-sm text-muted-foreground hover:underline"
+            >
               Terms
             </a>
-            <a href="#" className="text-sm text-muted-foreground hover:underline">
+            <a
+              href="#"
+              className="text-sm text-muted-foreground hover:underline"
+            >
               Privacy
             </a>
-            <a href="#" className="text-sm text-muted-foreground hover:underline">
+            <a
+              href="#"
+              className="text-sm text-muted-foreground hover:underline"
+            >
               Contact
             </a>
           </div>
         </div>
       </footer>
     </div>
-  )
+  );
 }
-

@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config";
 import bcrypt from "bcrypt";
 import authMiddleware from "../middleware";
+import e from "express";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -26,7 +27,7 @@ router.post("/signup", async (req, res) => {
 
     const newUser = await prisma.employer.create({
       data: {
-        email,
+        email: email,
         password: hashedPassword,
         companyName: companyname,
       },
@@ -94,6 +95,28 @@ router.post("/signin", authMiddleware, async (req, res) => {
     });
   } catch (error) {
     console.error("Signin error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+});
+
+router.get("/candidates", authMiddleware, async (req, res) => {
+  try {
+    const candidates = await prisma.user.findMany({
+      select: {
+        name: true,
+        email: true,
+        age: true,
+        resumeUrl: true,
+      },
+    });
+
+    return res.status(200).json({
+      candidates,
+    });
+  } catch (error) {
+    console.error("Candidates error:", error);
     return res.status(500).json({
       message: "Internal server error",
     });

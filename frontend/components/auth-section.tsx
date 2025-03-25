@@ -31,6 +31,7 @@ interface SignUpFormData {
   email: string;
   password: string;
   dob?: string;
+  companyname?: string;
 }
 
 // Environment check
@@ -214,12 +215,27 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
 
     try {
       const endpoint = forEmployers ? "hire/signup" : "user/signup";
+
+      // Create the correct payload format based on user type
+      const payload = forEmployers
+        ? {
+            email: data.email,
+            password: data.password,
+            companyname: data.name, // Use the name field as companyname for employers
+          }
+        : {
+            email: data.email,
+            password: data.password,
+            name: data.name,
+            dob: data.dob,
+          };
+
       const response = await fetch(`${API_URL}/api/${endpoint}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       });
 
       const responseData = await response.json();

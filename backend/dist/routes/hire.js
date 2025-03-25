@@ -34,7 +34,7 @@ router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function*
         const hashedPassword = yield bcrypt_1.default.hash(password, 10);
         const newUser = yield prisma.employer.create({
             data: {
-                email,
+                email: email,
                 password: hashedPassword,
                 companyName: companyname,
             },
@@ -95,6 +95,27 @@ router.post("/signin", middleware_1.default, (req, res) => __awaiter(void 0, voi
     }
     catch (error) {
         console.error("Signin error:", error);
+        return res.status(500).json({
+            message: "Internal server error",
+        });
+    }
+}));
+router.get("/candidates", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const candidates = yield prisma.user.findMany({
+            select: {
+                name: true,
+                email: true,
+                age: true,
+                resumeUrl: true,
+            },
+        });
+        return res.status(200).json({
+            candidates,
+        });
+    }
+    catch (error) {
+        console.error("Candidates error:", error);
         return res.status(500).json({
             message: "Internal server error",
         });
