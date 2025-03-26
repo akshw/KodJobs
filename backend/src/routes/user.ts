@@ -12,6 +12,7 @@ import {
   AWS_ACCESS_KEY_ID,
   AWS_ACCESS_KEY_SECRET,
 } from "../config";
+import { match } from "assert";
 
 const router = express.Router();
 
@@ -147,7 +148,7 @@ router.get("/upload", authMiddleware, async (req, res) => {
   try {
     // Generate unique file key
     //@ts-ignore
-    const fileKey = `uploads${req.userId}.pdf`;
+    const fileKey = `userId-${req.userId}.pdf`;
 
     const command = new PutObjectCommand({
       Bucket: "kodjobs2",
@@ -223,6 +224,49 @@ router.get("/profile", authMiddleware, async (req, res) => {
     return res.json(user);
   } catch (error) {
     console.error("Profile error:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+});
+
+router.get("/matches", authMiddleware, async (req, res) => {
+  try {
+    const matches = await prisma.matches.findMany({
+      where: {
+        // @ts-ignore
+        userId: req.userId,
+      },
+      select: {
+        id: true,
+        score: true,
+        match: true,
+        requirement: true,
+        employer: {
+          select: {
+            email: true,
+            companyName: true,
+          },
+        },
+      },
+    });
+
+    const formattedMatches = matches.map((match: any) => ({
+      id: match.id,
+      score: match.score,
+      match: match.match,
+      requirement: match.requirement,
+      employer: {
+        email: match.employer.email,
+        companyName: match.employer.companyName,
+      },
+    }));
+
+    return res.status(200).json({
+      matches: formattedMatches,
+    });
+  } catch (error) {
+    console.error("Matches error:", error);
     return res.status(500).json({
       message: "Internal server error",
     });

@@ -41,7 +41,6 @@ model Matches{
   employer Employer @relation(fields: [employerId], references: [id])
   employerId Int
   requirement String?
-
   score Int
   match Boolean
 }

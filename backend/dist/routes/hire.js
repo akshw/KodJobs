@@ -139,6 +139,21 @@ router.post("/require", middleware_1.default, (req, res) => __awaiter(void 0, vo
             where: { id: userId },
             data: { requirement },
         });
+        try {
+            fetch("http://localhost:5000/trymatch", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    requirement: requirement,
+                    employerId: userId,
+                }),
+            });
+        }
+        catch (error) {
+            console.error("Api call error:", error);
+        }
         return res.status(200).json({
             message: "Requirement updated successfully",
             user: {
@@ -150,6 +165,51 @@ router.post("/require", middleware_1.default, (req, res) => __awaiter(void 0, vo
     }
     catch (error) {
         console.error("Requirement update error:", error);
+        return res.status(500).json({
+            message: "Internal server error",
+        });
+    }
+}));
+router.get("/matches", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const matches = yield prisma.matches.findMany({
+            where: {
+                // @ts-ignore
+                userId: req.userId,
+            },
+            select: {
+                id: true,
+                score: true,
+                match: true,
+                requirement: true,
+                user: {
+                    select: {
+                        email: true,
+                        name: true,
+                        age: true,
+                        resumeUrl: true,
+                    },
+                },
+            },
+        });
+        const formattedMatches = matches.map((match) => ({
+            id: match.id,
+            score: match.score,
+            match: match.match,
+            requirement: match.requirement,
+            user: {
+                email: match.user.email,
+                name: match.user.name,
+                age: match.user.age,
+                resumeUrl: match.user.resumeUrl,
+            },
+        }));
+        return res.status(200).json({
+            matches: formattedMatches,
+        });
+    }
+    catch (error) {
+        console.error("Matches error:", error);
         return res.status(500).json({
             message: "Internal server error",
         });

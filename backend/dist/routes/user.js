@@ -137,7 +137,7 @@ router.get("/upload", middleware_1.default, (req, res) => __awaiter(void 0, void
     try {
         // Generate unique file key
         //@ts-ignore
-        const fileKey = `uploads${req.userId}.pdf`;
+        const fileKey = `userId-${req.userId}.pdf`;
         const command = new client_s3_1.PutObjectCommand({
             Bucket: "kodjobs2",
             Key: fileKey,
@@ -208,6 +208,47 @@ router.get("/profile", middleware_1.default, (req, res) => __awaiter(void 0, voi
     }
     catch (error) {
         console.error("Profile error:", error);
+        return res.status(500).json({
+            message: "Internal server error",
+        });
+    }
+}));
+router.get("/matches", middleware_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const matches = yield prisma.matches.findMany({
+            where: {
+                // @ts-ignore
+                userId: req.userId,
+            },
+            select: {
+                id: true,
+                score: true,
+                match: true,
+                requirement: true,
+                employer: {
+                    select: {
+                        email: true,
+                        companyName: true,
+                    },
+                },
+            },
+        });
+        const formattedMatches = matches.map((match) => ({
+            id: match.id,
+            score: match.score,
+            match: match.match,
+            requirement: match.requirement,
+            employer: {
+                email: match.employer.email,
+                companyName: match.employer.companyName,
+            },
+        }));
+        return res.status(200).json({
+            matches: formattedMatches,
+        });
+    }
+    catch (error) {
+        console.error("Matches error:", error);
         return res.status(500).json({
             message: "Internal server error",
         });
