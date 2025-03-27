@@ -143,20 +143,16 @@ router.post("/require", authMiddleware, async (req, res) => {
       data: { requirement },
     });
 
-    try {
-      fetch("http://localhost:5000/trymatch", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          requirement: requirement,
-          employerId: userId,
-        }),
-      });
-    } catch (error) {
-      console.error("Api call error:", error);
-    }
+    void fetch("http://localhost:5000/trymatch", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        requirement: requirement,
+        employerId: userId,
+      }),
+    }).catch(() => {});
 
     return res.status(200).json({
       message: "Requirement updated successfully",
