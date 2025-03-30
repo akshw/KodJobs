@@ -18,8 +18,16 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../config");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const middleware_1 = __importDefault(require("../middleware"));
+const client_sqs_1 = require("@aws-sdk/client-sqs");
 const router = express_1.default.Router();
 const prisma = new client_1.PrismaClient();
+const sqsClient = new client_sqs_1.SQSClient({
+    region: "ap-south-1",
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_ACCESS_KEY_SECRET,
+    },
+});
 router.post("/signup", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password, companyname } = req.body;
@@ -139,6 +147,23 @@ router.post("/require", middleware_1.default, (req, res) => __awaiter(void 0, vo
             where: { id: userId },
             data: { requirement },
         });
+        const messageBody = JSON.stringify({
+            userId,
+            requirement,
+        });
+        const sendMessageCommand = new client_sqs_1.SendMessageCommand({
+            QueueUrl: process.env.AWS_SQS_URL,
+            MessageBody: messageBody,
+            MessageGroupId: "requirementUpdates",
+            MessageDeduplicationId: `${userId}-${Date.now()}`,
+        });
+        try {
+            yield sqsClient.send(sendMessageCommand);
+            console.log(`Message sent to SQS for userId: ${userId}`);
+        }
+        catch (sqsError) {
+            console.error("Error sending message to SQS:", sqsError);
+        }
         void fetch("http://localhost:5000/trymatch", {
             method: "POST",
             headers: {

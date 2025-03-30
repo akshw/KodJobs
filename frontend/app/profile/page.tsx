@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { FileText, Briefcase, User } from "lucide-react";
+// import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ResumeUploader } from "@/components/resume-uploader";
@@ -181,12 +182,17 @@ export default function ProfilePage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 bg-gray-100">
+      <main className="flex-1 bg-gray-50">
         <div className="container mx-auto py-8 px-4">
-          <div className="bg-white rounded-lg shadow-lg p-8 max-w-3xl mx-auto">
-            <div className="flex items-center justify-between mb-8 pb-4 border-b">
-              <h1 className="text-3xl font-bold text-gray-800">My Profile</h1>
+          <div className="bg-white rounded-xl shadow-sm p-8 max-w-4xl mx-auto border border-gray-100">
+            <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
+              <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
               <Button
+                onClick={() =>
+                  alert(
+                    "This Feature will be made available soon just an /edit endpoint  away"
+                  )
+                }
                 variant="default"
                 className="bg-yellow-500 hover:bg-yellow-600 text-white"
               >
@@ -194,170 +200,198 @@ export default function ProfilePage() {
               </Button>
             </div>
 
-            <div className="space-y-8">
-              {/* Personal Information */}
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-                  <User className="mr-2 text-yellow-500" />
-                  Personal Information
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label className="text-sm text-gray-500 block mb-1">
-                      Name
-                    </label>
-                    <p className="font-medium text-gray-800">
-                      {profileData?.name}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm text-gray-500 block mb-1">
-                      Email
-                    </label>
-                    <p className="font-medium text-gray-800">
-                      {profileData?.email}
-                    </p>
-                  </div>
-                  <div>
-                    <label className="text-sm text-gray-500 block mb-1">
-                      Age
-                    </label>
-                    <p className="font-medium text-gray-800">
-                      {profileData?.age}
-                    </p>
-                  </div>
+            {/* Personal Information - Enhanced Section */}
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 mb-8 transition-all hover:shadow-sm">
+              <h2 className="text-lg font-semibold mb-4 text-gray-900 flex items-center">
+                <User className="mr-2 text-yellow-500 w-5 h-5" />
+                Personal Information
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    Name
+                  </label>
+                  <p className="font-medium text-gray-900 text-sm">
+                    {profileData?.name}
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    Email
+                  </label>
+                  <p className="font-medium text-gray-900 text-sm">
+                    {profileData?.email}
+                  </p>
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                    Age
+                  </label>
+                  <p className="font-medium text-gray-900 text-sm">
+                    {profileData?.age}
+                  </p>
                 </div>
               </div>
+            </div>
 
-              {/* Job Matches */}
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-                  <Briefcase className="mr-2 text-yellow-500" />
-                  Job Matches
-                </h2>
-                {matchesData && matchesData.length > 0 ? (
-                  <div className="space-y-4">
-                    {matchesData.map((match) => (
-                      <div
-                        key={match.id}
-                        className="border rounded-lg p-4 bg-white shadow-sm"
-                      >
-                        <div className="flex items-start">
-                          <Briefcase className="text-yellow-500 flex-shrink-0 mr-4 h-6 w-6" />
-                          <div className="w-full">
-                            <div className="flex justify-between items-center mb-2">
-                              <h3 className="font-medium">
+            {/* Enhanced Job Matches Section */}
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100 mb-8">
+              <h2 className="text-lg font-semibold mb-4 text-gray-900 flex items-center">
+                <Briefcase className="mr-2 text-yellow-500 w-5 h-5" />
+                Job Matches
+              </h2>
+              {matchesData && matchesData.length > 0 ? (
+                <div className="space-y-3">
+                  {matchesData.map((match) => (
+                    <div
+                      key={match.id}
+                      className="group relative border rounded-xl p-4 bg-white shadow-xs hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div className="bg-yellow-100 p-2 rounded-lg">
+                          <Briefcase className="text-yellow-600 w-5 h-5" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <h3 className="font-semibold text-gray-900 text-sm">
                                 {match.employer.companyName}
                               </h3>
-                              <span
-                                className={`px-2 py-1 rounded text-xs font-medium ${
-                                  match.match
-                                    ? "bg-green-100 text-green-800"
-                                    : "bg-yellow-100 text-yellow-800"
-                                }`}
-                              >
-                                {match.match ? "Matched" : "Potential Match"}
-                              </span>
-                            </div>
-                            <div className="grid grid-cols-2 gap-2 text-sm">
-                              <div>
-                                <span className="text-gray-500">Employer:</span>{" "}
+                              <p className="text-xs text-gray-500 mt-1">
                                 {match.employer.email}
-                              </div>
-                              <div>
-                                <span className="text-gray-500">
+                              </p>
+                            </div>
+                            <span
+                              className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                                match.match
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-blue-100 text-blue-800"
+                              }`}
+                            >
+                              {match.match ? "Direct Match" : "Potential"}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-4">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-medium text-gray-500">
                                   Match Score:
-                                </span>{" "}
-                                {match.score}/10
+                                </span>
+                                <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                                  <div
+                                    className="h-full bg-yellow-500"
+                                    style={{ width: `${match.score * 10}%` }}
+                                  />
+                                </div>
+                                <span className="text-xs font-medium text-gray-700">
+                                  {match.score}/10
+                                </span>
                               </div>
                             </div>
-                            {match.requirement && (
-                              <div className="mt-2 text-sm">
-                                <span className="text-gray-500">
-                                  Requirement:
+                          </div>
+                          {match.requirement && (
+                            <div className="mt-3 p-3 bg-gray-50 rounded-lg">
+                              <p className="text-xs text-gray-600">
+                                <span className="font-medium">
+                                  Key Requirement:
                                 </span>{" "}
                                 {match.requirement}
-                              </div>
-                            )}
-                          </div>
+                              </p>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg">
-                    <p className="text-gray-500 mb-4">
-                      No job matches available
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-200 rounded-xl bg-white">
+                  <div className="text-center mb-4">
+                    <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                    <h3 className="text-sm font-medium text-gray-900">
+                      No matches yet
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Start by uploading your resume if uploaded sit back and
+                      relax
                     </p>
-                    <Button
-                      variant="default"
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white"
-                      onClick={fetchMatches}
-                    >
-                      Find Matches
-                    </Button>
                   </div>
-                )}
-              </div>
+                  {/* <Button
+                    variant="default"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                    onClick={fetchMatches}
+                  >
+                    Find Matches
+                  </Button> */}
+                </div>
+              )}
+            </div>
 
-              {/* Resume Section */}
-
-              <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                <h2 className="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-                  <FileText className="mr-2 text-yellow-500" />
-                  Resume
-                </h2>
-                {profileData?.resumeUrl ? (
+            {/* Enhanced Resume Section
+            <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
+              <h2 className="text-lg font-semibold mb-4 text-gray-900 flex items-center">
+                <FileText className="mr-2 text-yellow-500 w-5 h-5" />
+                Resume
+              </h2>
+              {profileData?.resumeUrl ? (
+                <div className="flex items-center justify-between bg-white p-4 rounded-lg border border-gray-200">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-green-100 p-2 rounded-lg">
+                      <FileText className="w-5 h-5 text-green-600" />
+                    </div>
+                    <span className="text-sm font-medium text-gray-900">
+                      resume.pdf
+                    </span>
+                  </div>
                   <a
                     href={profileData.resumeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md transition-colors"
+                    className="text-sm font-medium text-yellow-600 hover:text-yellow-700 flex items-center gap-2"
                   >
-                    <FileText className="mr-2" />
                     View Resume
+                    <ArrowUpRight className="w-4 h-4" />
                   </a>
-                ) : (
-                  <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg">
-                    <p className="text-gray-500 mb-4">No resume uploaded</p>
-                    <Button
-                      variant="default"
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white"
-                      onClick={() => setShowResumeUploader(true)}
-                    >
-                      Upload Resume
-                    </Button>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-200 rounded-xl bg-white">
+                  <div className="text-center mb-4">
+                    <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                    <h3 className="text-sm font-medium text-gray-900">
+                      No resume uploaded
+                    </h3>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Upload your resume to get better matches
+                    </p>
                   </div>
-                )}
-              </div>
-            </div>
+                  <Button
+                    variant="default"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white"
+                    onClick={() => setShowResumeUploader(true)}
+                  >
+                    Upload Resume
+                  </Button>
+                </div>
+              )}
+            </div> */}
           </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="w-full border-t py-6 md:py-0">
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-          <p className="text-sm text-muted-foreground">
+      <footer className="w-full border-t bg-white">
+        <div className="container flex flex-col items-center justify-between gap-4 py-6 md:h-20 md:flex-row">
+          <p className="text-sm text-gray-500">
             &copy; {new Date().getFullYear()} KodJobs. All rights reserved.
           </p>
           <div className="flex gap-4">
-            <a
-              href="#"
-              className="text-sm text-muted-foreground hover:underline"
-            >
-              Terms
-            </a>
-            <a
-              href="#"
-              className="text-sm text-muted-foreground hover:underline"
-            >
+            <a href="#" className="text-sm text-gray-500 hover:text-gray-700">
               Privacy
             </a>
-            <a
-              href="#"
-              className="text-sm text-muted-foreground hover:underline"
-            >
+            <a href="#" className="text-sm text-gray-500 hover:text-gray-700">
+              Terms
+            </a>
+            <a href="#" className="text-sm text-gray-500 hover:text-gray-700">
               Contact
             </a>
           </div>

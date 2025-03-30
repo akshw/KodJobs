@@ -224,14 +224,9 @@ function CandidateCard({ candidate, isSelected, onClick }: CandidateCardProps) {
 
         <div className="mt-3 pt-3 border-t border-dashed">
           <Button
-            variant={isSelected ? "default" : "outline"}
+            variant="default"
             size="sm"
-            className={cn(
-              "w-full gap-2 text-xs transition-colors",
-              isSelected
-                ? "bg-black text-white hover:bg-white hover:text-black border-black"
-                : "bg-black text-white hover:bg-white hover:text-black border-black"
-            )}
+            className="w-full gap-2 text-xs transition-colors bg-black text-white hover:bg-white hover:text-black border-black"
             onClick={(e) => {
               e.stopPropagation();
               if (candidate.resumeUrl) {
@@ -249,7 +244,9 @@ function CandidateCard({ candidate, isSelected, onClick }: CandidateCardProps) {
             disabled={!candidate.resumeUrl}
           >
             <Download className="h-3 w-3" />
-            {candidate.resumeUrl ? "Download Resume" : "No Resume"}
+            {candidate.resumeUrl
+              ? "Download Resume"
+              : "Add Requirements and Download Resume"}
           </Button>
         </div>
       </CardContent>

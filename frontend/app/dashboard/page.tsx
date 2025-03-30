@@ -10,12 +10,48 @@ import Link from "next/link";
 export default function DashboardPage() {
   const [showResumeUploader, setShowResumeUploader] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   // Check login status on component mount
   useEffect(() => {
-    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
-    setIsLoggedIn(loggedIn);
+    const checkAuth = () => {
+      const token = localStorage.getItem("token");
+      const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+      setIsLoggedIn(loggedIn);
+      if (!token || !loggedIn) {
+        setError("Your session has expired. Please log in again.");
+        setLoading(false);
+        return false;
+      }
+      return true;
+    };
+
+    const loadData = async () => {
+      if (!checkAuth()) {
+        return;
+      }
+      setLoading(false);
+    };
+
+    loadData();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-100">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-yellow-500"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-100">
+        <div className="text-red-500 font-medium text-lg">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col">

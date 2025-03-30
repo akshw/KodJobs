@@ -4,9 +4,18 @@ import jwt from "jsonwebtoken";
 import { JWT_SECRET } from "../config";
 import bcrypt from "bcrypt";
 import authMiddleware from "../middleware";
+import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
 
 const router = express.Router();
 const prisma = new PrismaClient();
+
+const sqsClient = new SQSClient({
+  region: "ap-south-1",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_ACCESS_KEY_SECRET!,
+  },
+});
 
 router.post("/signup", async (req, res) => {
   try {
@@ -142,6 +151,25 @@ router.post("/require", authMiddleware, async (req, res) => {
       where: { id: userId },
       data: { requirement },
     });
+
+    const messageBody = JSON.stringify({
+      userId,
+      requirement,
+    });
+
+    const sendMessageCommand = new SendMessageCommand({
+      QueueUrl: process.env.AWS_SQS_URL!,
+      MessageBody: messageBody,
+      MessageGroupId: "requirementUpdates",
+      MessageDeduplicationId: `${userId}-${Date.now()}`,
+    });
+
+    try {
+      await sqsClient.send(sendMessageCommand);
+      console.log(`Message sent to SQS for userId: ${userId}`);
+    } catch (sqsError) {
+      console.error("Error sending message to SQS:", sqsError);
+    }
 
     void fetch("http://localhost:5000/trymatch", {
       method: "POST",

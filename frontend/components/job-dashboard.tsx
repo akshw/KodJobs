@@ -139,6 +139,7 @@ export const JobDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("all");
   const [viewMode, setViewMode] = useState("grid");
   const [searchTerm, setSearchTerm] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -158,6 +159,7 @@ export const JobDashboard: React.FC = () => {
         toast.success("Jobs loaded successfully!");
       } catch (error) {
         console.error("Error fetching jobs:", error);
+        setError("Failed to load jobs. Please try again later.");
         toast.error("Failed to load jobs");
 
         // Use sample data if API fails
@@ -228,6 +230,16 @@ export const JobDashboard: React.FC = () => {
   const handleTabChange = (value: string) => {
     setActiveTab(value);
   };
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-red-500 font-medium text-lg">{error}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl animate-fade-in">

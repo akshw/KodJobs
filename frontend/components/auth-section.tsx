@@ -466,7 +466,7 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
               <Input
                 id="email-signup"
                 type="email"
-                placeholder="Work email"
+                placeholder="Email"
                 className={cn(
                   "h-11",
                   signUpForm.errors.email &&
@@ -491,20 +491,28 @@ export function AuthSection({ forEmployers = false }: AuthSectionProps) {
           {!forEmployers && (
             <div className="space-y-2">
               <div className="relative">
-                <Input
-                  id="dob-signup"
-                  type="date"
-                  placeholder="Date of birth"
-                  className={cn(
-                    "h-11",
-                    signUpForm.errors.dob &&
-                      "border-red-500 focus-visible:ring-red-500",
-                    "calendar-enhanced" // Custom class for styling
+                <div className="relative">
+                  <Input
+                    id="dob-signup"
+                    type="date"
+                    className={cn(
+                      "h-11 w-full",
+                      signUpForm.errors.dob &&
+                        "border-red-500 focus-visible:ring-red-500",
+                      !(signUpForm.formData as SignUpFormData).dob &&
+                        "text-transparent"
+                    )}
+                    onFocus={handleDateFocus}
+                    value={(signUpForm.formData as SignUpFormData).dob}
+                    onChange={(e) => signUpForm.setField("dob", e.target.value)}
+                    required
+                  />
+                  {!(signUpForm.formData as SignUpFormData).dob && (
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                      Date of Birth
+                    </div>
                   )}
-                  onFocus={handleDateFocus}
-                  value={(signUpForm.formData as SignUpFormData).dob}
-                  onChange={(e) => signUpForm.setField("dob", e.target.value)}
-                />
+                </div>
                 {signUpForm.errors.dob && (
                   <div
                     className={cn(
