@@ -30,19 +30,7 @@ export function AIMatchingSection() {
     return () => clearInterval(interval);
   }, []);
 
-  // Auto-advance through steps
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setActiveStep((prev) => (prev + 1) % steps.length);
-        setIsAnimating(false);
-      }, 500);
-    }, 3000); // Change steps every 5 seconds
-
-    return () => clearInterval(interval);
-  }, []);
-
+  // Move steps array declaration before useEffect
   const steps = [
     {
       icon: <FileText className="h-10 w-10 text-yellow-500" />,
@@ -67,6 +55,19 @@ export function AIMatchingSection() {
       description: "Apply with one click and track your application status",
     },
   ];
+
+  // Then keep the useEffect that uses steps.length
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsAnimating(true);
+      setTimeout(() => {
+        setActiveStep((prev) => (prev + 1) % steps.length);
+        setIsAnimating(false);
+      }, 500);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [steps.length]);
 
   // This function is now only used for manual advancement
   const handleNextStep = () => {

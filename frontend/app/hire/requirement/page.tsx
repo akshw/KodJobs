@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
@@ -33,7 +33,7 @@ export default function RequirementPage() {
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  const fetchMatches = async () => {
+  const fetchMatches = useCallback(async () => {
     try {
       const response = await fetch(`${API_URL}/api/hire/matches`, {
         headers: {
@@ -53,11 +53,11 @@ export default function RequirementPage() {
     } catch (error) {
       console.error("Error fetching matches:", error);
     }
-  };
+  }, [API_URL]);
 
   useEffect(() => {
     fetchMatches();
-  }, []);
+  }, [fetchMatches]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -73,7 +73,7 @@ export function CandidateProfiles() {
     };
 
     fetchCandidates();
-  }, []);
+  }, [API_URL]);
 
   // Filter candidates based on search term and active tab
   const filteredCandidates = candidates.filter((candidate) => {
