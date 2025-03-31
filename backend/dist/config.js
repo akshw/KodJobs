@@ -33,10 +33,12 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AWS_ACCESS_KEY_SECRET = exports.AWS_ACCESS_KEY_ID = exports.PORT = exports.JWT_SECRET = void 0;
+exports.MATCH_API_URL = exports.AWS_SQS_URL = exports.AWS_ACCESS_KEY_SECRET = exports.AWS_ACCESS_KEY_ID = exports.PORT = exports.JWT_SECRET = void 0;
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 exports.JWT_SECRET = process.env.JWT_SECRET;
 exports.PORT = process.env.PORT;
 exports.AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID;
 exports.AWS_ACCESS_KEY_SECRET = process.env.AWS_ACCESS_KEY_SECRET;
+exports.AWS_SQS_URL = process.env.AWS_SQS_URL;
+exports.MATCH_API_URL = process.env.MATCH_API_URL;

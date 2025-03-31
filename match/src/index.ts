@@ -219,6 +219,7 @@ async function sendMatchMessage(
 
 // @ts-ignore
 app.post("/trymatch", async (req: Request, res: Response) => {
+  console.log("trymatch called");
   try {
     const { employerId, requirement } = req.body;
 

@@ -8,6 +8,7 @@
  */
 
 // Types
+
 export interface ResumeFile {
   id: string;
   name: string;
@@ -160,7 +161,7 @@ export async function uploadResumeToS3(file: File): Promise<ResumeFile> {
       throw new Error(validation.error);
     }
 
-    const API_URL = "http://localhost:4000";
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
     const token = localStorage.getItem("token");
 
     try {

@@ -12,7 +12,6 @@ import {
   AWS_ACCESS_KEY_ID,
   AWS_ACCESS_KEY_SECRET,
 } from "../config";
-import { match } from "assert";
 
 const router = express.Router();
 
@@ -146,7 +145,7 @@ router.post("/signin", async (req, res) => {
 
 router.get("/upload", authMiddleware, async (req, res) => {
   try {
-    // Generate unique file key
+    // I should Generate unique file key
     //@ts-ignore
     const fileKey = `userId-${req.userId}.pdf`;
 

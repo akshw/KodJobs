@@ -1,3 +1,10 @@
 node_modules
 # Keep environment variables out of version control
 .env
+
+
+# docker build -t kodjobs-backend .
+#  docker run -p 4000:4000 kodjobs-backend
+
+# docker push akah606/kodjobs-backend:v1
+#    docker tag kodjobs-match akah606/kodjobs-match:latest

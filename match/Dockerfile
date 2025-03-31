@@ -6,13 +6,13 @@ RUN npm install -g pnpm
 
 COPY package*.json pnpm-lock.yaml ./
 
-COPY ./prisma ./prisma/
-
 RUN pnpm install
 
-RUN pnpm prisma generate
+COPY ./prisma ./prisma/
 
 COPY . .
+
+RUN pnpm prisma generate
 
 EXPOSE 5000
 

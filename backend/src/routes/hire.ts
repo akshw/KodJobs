@@ -1,7 +1,7 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config";
+import { JWT_SECRET, MATCH_API_URL } from "../config";
 import bcrypt from "bcrypt";
 import authMiddleware from "../middleware";
 import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs";
@@ -166,12 +166,14 @@ router.post("/require", authMiddleware, async (req, res) => {
 
     try {
       await sqsClient.send(sendMessageCommand);
-      console.log(`Message sent to SQS for userId: ${userId}`);
+      console.log(`Message sent to SQS for emplyerId: ${userId}`);
     } catch (sqsError) {
       console.error("Error sending message to SQS:", sqsError);
     }
 
-    void fetch("http://localhost:5000/trymatch", {
+    console.log(MATCH_API_URL);
+
+    void fetch(MATCH_API_URL as string, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

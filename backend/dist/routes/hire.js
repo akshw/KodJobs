@@ -159,12 +159,13 @@ router.post("/require", middleware_1.default, (req, res) => __awaiter(void 0, vo
         });
         try {
             yield sqsClient.send(sendMessageCommand);
-            console.log(`Message sent to SQS for userId: ${userId}`);
+            console.log(`Message sent to SQS for emplyerId: ${userId}`);
         }
         catch (sqsError) {
             console.error("Error sending message to SQS:", sqsError);
         }
-        void fetch("http://localhost:5000/trymatch", {
+        console.log(config_1.MATCH_API_URL);
+        void fetch(config_1.MATCH_API_URL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -31,7 +31,7 @@ export default function RequirementPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [matches, setMatches] = useState<Match[]>([]);
 
-  const API_URL = "http://localhost:4000";
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const fetchMatches = async () => {
     try {

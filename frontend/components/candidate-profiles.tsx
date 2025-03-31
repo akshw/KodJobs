@@ -27,18 +27,16 @@ export function CandidateProfiles() {
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   useEffect(() => {
     const fetchCandidates = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:4000/api/hire/candidates",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        const response = await fetch(`${API_URL}/api/hire/candidates`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         const data = await response.json();
 
         // Check if data exists and has the candidates property
@@ -302,7 +300,7 @@ function CandidateDetail({ candidate }: CandidateDetailProps) {
           disabled={!candidate.resumeUrl}
         >
           <Download className="h-4 w-4" />
-          {candidate.resumeUrl ? "Download Resume" : "No Resume Available"}
+          {candidate.resumeUrl ? "Download Resume" : "Available Soon"}
         </Button>
       </div>
 
