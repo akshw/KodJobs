@@ -13,7 +13,6 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // Check login status on component mount
   useEffect(() => {
     const checkAuth = () => {
       const token = localStorage.getItem("token");

@@ -1,14 +1,5 @@
 "use client";
 
-/**
- * Resume Service - Handles resume upload, storage, and retrieval
- *
- * This service provides a production-ready implementation for resume management
- * with proper error handling, security measures, and performance optimizations.
- */
-
-// Types
-
 export interface ResumeFile {
   id: string;
   name: string;
@@ -18,25 +9,18 @@ export interface ResumeFile {
   url?: string;
 }
 
-// Constants
 const STORAGE_KEY = "kodjobs_resumes";
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const ALLOWED_FILE_TYPES = [
   "application/pdf",
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 ];
 
-/**
- * Validates a file for upload
- * @param file The file to validate
- * @returns An object with validation result and error message if any
- */
 export function validateResumeFile(file: File): {
   valid: boolean;
   error?: string;
 } {
-  // Check file type
   if (!ALLOWED_FILE_TYPES.includes(file.type)) {
     return {
       valid: false,
@@ -44,23 +28,16 @@ export function validateResumeFile(file: File): {
     };
   }
 
-  // Check file size
   if (file.size > MAX_FILE_SIZE) {
     return {
       valid: false,
-      error: "File is too large. Maximum size is 5MB.",
+      error: "File is too large. Maximum size is 10MB.",
     };
   }
 
   return { valid: true };
 }
 
-/**
- * Saves a resume file to local storage
- * In a production environment, this would upload to a secure storage service
- * @param file The file to save
- * @returns A promise that resolves to the saved resume file
- */
 export async function saveResumeFile(file: File): Promise<ResumeFile> {
   try {
     // Validate file

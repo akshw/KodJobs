@@ -79,7 +79,6 @@ export default function ProfilePage() {
 
       const data = await response.json();
 
-      // Handle different possible response structures
       if (Array.isArray(data)) {
         setMatchesData(data);
       } else if (data && Array.isArray(data.matches)) {
