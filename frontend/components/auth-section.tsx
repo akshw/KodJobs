@@ -36,7 +36,6 @@ interface SignUpFormData {
 
 // Environment check
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-console.log("API URL:", API_URL);
 
 if (!API_URL) {
   throw new Error("API_URL is not defined - check your environment variables");
